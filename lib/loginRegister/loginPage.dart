@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/bezierContainer.dart';
 import 'package:flutter_app/components/signUpPage.dart';
-import 'package:flutter_app/task.dart';
+import 'package:flutter_app/showTask.dart';
 import 'package:flutter_app/main.dart';
 import 'components/alertDialog.dart';
 
