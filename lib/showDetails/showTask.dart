@@ -73,27 +73,6 @@ class _TodoHomeState extends State<TodoHome> {
                 ],
                 onSelected: (item) => SelectedItem(context, item),
               ),
-
-
-              // ],
-              //   IconButton(
-              //     icon: const Icon(Icons.search_off),
-              //     tooltip: 'Show text message',
-              //     onPressed: () {
-              //       setState(() {
-              //       });
-              //     },
-              //   ),
-              //
-              //   IconButton(
-              //     icon: const Icon(Icons.menu),
-              //     tooltip: 'Menu item',
-              //     onPressed: () {
-              //       setState(() {
-              //
-              //       });
-              //     },
-              //   ),
             ],
           ),
 
