@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/bezierContainer.dart';
-import 'package:flutter_app/components/signUpPage.dart';
-import 'package:flutter_app/showTask.dart';
+import 'package:flutter_app/loginRegister/signUpPage.dart';
+import 'package:flutter_app/showDetails/showTask.dart';
 import 'package:flutter_app/main.dart';
-import 'components/alertDialog.dart';
+import '../components/alertDialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -16,16 +17,36 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
-
-  String email="";
-  String password="";
-
-
-  String emailDummy="baral@gmail.com";
-  String passwordDummy="1234";
+  FirebaseAuth auth = FirebaseAuth.instance;
+  Future<UserCredential> userCredential;
 
 
-   var textController = new TextEditingController();
+
+
+  String loginEmail="";
+  String loginPassword="";
+  // var textController = new TextEditingController();
+
+
+
+  void userlogin(String email, String password){
+
+    try {
+          userCredential =  auth.signInWithEmailAndPassword(
+          email: email,
+          password: password
+          );
+          print('Login Successfully');
+
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+  }
+
 
   Widget _backButton() {
     return InkWell(
@@ -36,8 +57,8 @@ class _LoginPageState extends State<LoginPage> {
         child: Row(
           children: <Widget>[
             Container(
-              child: Text('Welcome\n\t\t\t\tTo\nTask Tracker',
-                  style: TextStyle(fontSize: 13, color: colorsName, fontWeight: FontWeight.w500)),
+              child: Text('Welcome\nTask Tracker',
+                  style: TextStyle(fontSize: 18,color: colorsName, fontWeight: FontWeight.w500)),
             )
           ],
         ),
@@ -53,10 +74,11 @@ class _LoginPageState extends State<LoginPage> {
         return new TextField(
             onChanged: (val){
               setState(() {
-                email = val;
-                textController.clear();
+                loginEmail = val;
+
               });
             },
+
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
                 border: InputBorder.none,
@@ -66,12 +88,11 @@ class _LoginPageState extends State<LoginPage> {
 
       }else{
         return new TextField(
+
           // obscureText: isPassword,
             onChanged: (val){
               setState(() {
-                password = val;
-                textController.clear();
-
+                loginPassword = val;
               });
             },
             obscureText: true,
@@ -109,14 +130,13 @@ class _LoginPageState extends State<LoginPage> {
       onTap: (){
 
         setState(() {
-             if(email ==emailDummy && password == passwordDummy){
-                 Navigator.push(context,MaterialPageRoute(builder: (context)=>TodoHome(email: email, password: password)));
-             }else{
-                print("Email==>$email");
-                print("Password==>$password");
-                print("EmailDummy==>$emailDummy");
-                print("PasswordDummy==>$passwordDummy");
+             if(loginEmail.isNotEmpty && loginPassword.isNotEmpty ){
+                 userlogin(loginEmail,loginPassword);
+                 print("Email:$loginEmail");
+                 print("Password: $loginPassword");
 
+                 Navigator.push(context,MaterialPageRoute(builder: (context)=>TodoHome(email: loginEmail, password: loginPassword)));
+             }else{
                 setState(() {
                   showAlertDialog(context);
                 });
@@ -229,6 +249,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
 
   Widget _createAccountLabel() {
     return InkWell(

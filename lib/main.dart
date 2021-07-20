@@ -1,15 +1,15 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter_app/components/signUpPage.dart';
+import 'package:flutter_app/loginRegister/signUpPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
-import 'task.dart';
+import 'showDetails/showTask.dart';
 
 //flutter packages importing
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'loginPage.dart';
+import 'loginRegister/loginPage.dart';
 
 
   const text_color_white = Colors.white;

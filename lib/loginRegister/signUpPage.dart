@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/bezierContainer.dart';
 import 'package:flutter_app/main.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key, this.title}) : super(key: key);
@@ -12,6 +14,39 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  Future<UserCredential> userCredential ;
+
+
+
+  var textEditingController = new TextEditingController();
+  String registerEmail    ="";
+  String registerPassword ="";
+  String registerUsername ="";
+
+
+  void registerUser(String email , String password){
+
+    try {
+          userCredential = auth.createUserWithEmailAndPassword(
+          email: registerEmail,
+          password: registerPassword
+      );
+
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -32,7 +67,55 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _entryField(String title,String tracker, {bool isPassword = false}) {
+
+    Widget _checkField(){
+
+      if(tracker == "e"){
+        return new TextField(
+            onChanged: (val){
+              setState(() {
+                registerEmail = val;
+              });
+            },
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                fillColor: Color(0xfff5f5f6),
+                filled: true)
+        );
+
+      }else if( tracker  == "p"){
+        return new TextField(
+          // obscureText: isPassword,
+            onChanged: (val){
+              setState(() {
+                registerPassword = val;
+
+              });
+            },
+            obscureText: true,
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                fillColor: Color(0xfff5f5f6),
+                filled: true)
+        );
+      }else{
+          return new TextField(
+          // obscureText: isPassword,
+          onChanged: (val){
+                  setState(() {
+                  registerUsername = val;
+                  });
+          },
+          decoration: InputDecoration(
+          border: InputBorder.none,
+          fillColor: Color(0xfff5f5f6),
+          filled: true));
+
+          }
+    }
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -45,12 +128,7 @@ class _SignUpPageState extends State<SignUpPage> {
           SizedBox(
             height: 10,
           ),
-          TextField(
-              obscureText: isPassword,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff5f5f6),
-                  filled: true))
+           _checkField(),
         ],
       ),
     );
@@ -60,26 +138,43 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
   Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [ colorsName, colorsNameLess])),
-      child: Text(
-        'Sign Up',
-        style: TextStyle(fontSize: 15, color: Colors.white,fontWeight: FontWeight.w600),
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+            if(registerEmail.length > 0  && registerPassword.length >0  && registerUsername.length > 0){
+              registerUser(registerEmail, registerPassword);
+            }else{
+              Fluttertoast.showToast(
+                  msg: "Oops..! Make sure you have inserted your email, password and username.",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 5,
+                  fontSize: 16.0
+              );
+            }
+        });
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(50)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [ colorsName, colorsNameLess])),
+        child: Text(
+          'Sign Up',
+          style: TextStyle(fontSize: 15, color: Colors.white,fontWeight: FontWeight.w600),
+        ),
       ),
     );
   }
@@ -143,9 +238,9 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Username"),
-        _entryField("Email id"),
-        _entryField("Password", isPassword: true),
+        _entryField("Username","u"),
+        _entryField("Email id","e"),
+        _entryField("Password","p", isPassword: true),
       ],
     );
   }
