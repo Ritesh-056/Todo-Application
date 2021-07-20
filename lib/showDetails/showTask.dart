@@ -4,14 +4,10 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_app/components/alertDialog.dart';
 import 'package:flutter_app/loginRegister/loginPage.dart';
 import 'package:flutter_app/main.dart';
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_app/showDetails/insert_task.dart';
-import 'package:flutter_app/components/custom_widgets.dart';
 
 
 
@@ -20,7 +16,7 @@ class TodoHome extends StatefulWidget {
 
 
   final String password,email;
-  TodoHome({Key key, @required this.email,@required this.password, }):super(key: key);
+  TodoHome({Key key, @required this.email,@required this.password, });
 
 
 
@@ -85,80 +81,80 @@ class _TodoHomeState extends State<TodoHome> {
             },
           ),
 
-          body: Container(
-            child:new StreamBuilder(
-                stream: documentRef.doc(user.uid).collection('user_todo').snapshots(),
-                builder: (context, snapShot) {
-                  if (snapShot.hasData) {
-                    final List<DocumentSnapshot> documents = snapShot.data.docs;
+          body:
+          check_userNull(context),
+          // child:new StreamBuilder(
+            //     stream: documentRef.doc(user.uid).collection('user_todo').snapshots(),
+            //     builder: (context, snapShot) {
+            //       if (snapShot.hasData) {
+            //         final List<DocumentSnapshot> documents = snapShot.data.docs;
+            //
+            //         if (documents.isNotEmpty) {
+            //           return ListView(
+            //               children: documents.
+            //               map((doc) =>
+            //                   Card(
+            //                     shape: RoundedRectangleBorder(
+            //                       borderRadius: BorderRadius.circular(10.0),
+            //                     ),
+            //                     shadowColor: Colors.black45,
+            //                     elevation: 10,
+            //                     child: ListTile(
+            //                       leading: Icon(
+            //                         Icons.event, color: Colors.black54, size: 30,),
+            //                       title: Text(doc['title'],
+            //                         style: TextStyle(fontSize: 15),),
+            //                       subtitle: Text(doc['date'],
+            //                         style: TextStyle(fontSize: 12),),
+            //                       // trailing: Icon(Icons.delete,color: colorsName,size: 30, ),
+            //                       trailing: IconButton(
+            //                           tooltip: 'Delete',
+            //                           onPressed: () {
+            //                             setState(() {
+            //                               //something is going to happen here..
+            //                               documentRef.doc(user.uid).collection('user_todo').doc(doc.id).delete();
+            //                             });
+            //                           },
+            //                           icon: Icon(
+            //                             Icons.delete,
+            //                             color: colorsName,
+            //                             size: 30,)),
+            //                     ),
+            //                   )).toList());
+            //         } else {
+            //           return Center(
+            //             child: Container(child: Padding(
+            //               padding: const EdgeInsets.all(8.0),
+            //               child: Column(
+            //                 children: [
+            //                   Icon(Icons.hourglass_empty_outlined,
+            //                     color: colorsName, size: 100,),
+            //                   Text('Empty data..!'),
+            //                 ],
+            //               ),
+            //             ),),
+            //           );
+            //         }
+            //       } else if (snapShot.hasError) {
+            //         return Center(child: Container(child: Text("It's Error!")));
+            //       }
+            //
+            //       return Center(
+            //         child: Container(child: Padding(
+            //           padding: const EdgeInsets.all(8.0),
+            //           child: Column(
+            //             children: [
+            //               Padding(
+            //                 padding: const EdgeInsets.symmetric(vertical: 8.0),
+            //                 child: CircularProgressIndicator(strokeWidth: 4,),
+            //               ),
+            //               Text('Loading..!'),
+            //             ],
+            //           ),
+            //         ),),
+            //       );
+            //     })
 
-                    if (documents.isNotEmpty) {
-                      return ListView(
-                          children: documents.
-                          map((doc) =>
-                              Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                shadowColor: Colors.black45,
-                                elevation: 10,
-                                child: ListTile(
-                                  leading: Icon(
-                                    Icons.event, color: Colors.black54, size: 30,),
-                                  title: Text(doc['title'],
-                                    style: TextStyle(fontSize: 15),),
-                                  subtitle: Text(doc['date'],
-                                    style: TextStyle(fontSize: 12),),
-                                  // trailing: Icon(Icons.delete,color: colorsName,size: 30, ),
-                                  trailing: IconButton(
-                                      tooltip: 'Delete',
-                                      onPressed: () {
-                                        setState(() {
-                                          //something is going to happen here..
-                                          documentRef.doc(user.uid).collection('user_todo').doc(doc.id).delete();
-                                        });
-                                      },
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: colorsName,
-                                        size: 30,)),
-                                ),
-                              )).toList());
-                    } else {
-                      return Center(
-                        child: Container(child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Icon(Icons.hourglass_empty_outlined,
-                                color: colorsName, size: 100,),
-                              Text('Empty data..!'),
-                            ],
-                          ),
-                        ),),
-                      );
-                    }
-                  } else if (snapShot.hasError) {
-                    return Center(child: Container(child: Text("It's Error!")));
-                  }
-
-                  return Center(
-                    child: Container(child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: CircularProgressIndicator(strokeWidth: 4,),
-                          ),
-                          Text('Loading..!'),
-                        ],
-                      ),
-                    ),),
-                  );
-                })
-            ,
-          ),
         )
 
     );
@@ -167,23 +163,17 @@ class _TodoHomeState extends State<TodoHome> {
 
 
 
-  void SelectedItem(BuildContext context, item) {
+  Future<void> SelectedItem(BuildContext context, item) async {
     switch (item) {
       case 0:
-
         break;
       case 1:
         show_alertDialog(context);
         break;
 
       case 2:
-
-
-        if(user !=null){
-
-          setState(() {
+        if(auth.currentUser?.uid !=null){
             _signOut();
-          });
         }else{
           print("No user found...!");
         }
@@ -198,81 +188,83 @@ class _TodoHomeState extends State<TodoHome> {
   }
 
 
-  check_userNull() {
-    if(  user.uid.isNotEmpty ){
-      new StreamBuilder(
-          stream: documentRef.doc(user.uid).collection('user_todo').snapshots(),
-          builder: (context, snapShot) {
-            if (snapShot.hasData) {
-              final List<DocumentSnapshot> documents = snapShot.data.docs;
+  check_userNull(BuildContext context) {
+    if(   FirebaseAuth.instance.currentUser?.uid != null){
+     return new Container(
+        child: new StreamBuilder(
+            stream: documentRef.doc(user.uid).collection('user_todo').snapshots(),
+            builder: (context, snapShot) {
+              if (snapShot.hasData) {
+                final List<DocumentSnapshot> documents = snapShot.data.docs;
 
-              if (documents.isNotEmpty) {
-                return ListView(
-                    children: documents.
-                    map((doc) =>
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          shadowColor: Colors.black45,
-                          elevation: 10,
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.event, color: Colors.black54, size: 30,),
-                            title: Text(doc['title'],
-                              style: TextStyle(fontSize: 15),),
-                            subtitle: Text(doc['date'],
-                              style: TextStyle(fontSize: 12),),
-                            // trailing: Icon(Icons.delete,color: colorsName,size: 30, ),
-                            trailing: IconButton(
-                                tooltip: 'Delete',
-                                onPressed: () {
-                                  setState(() {
-                                    //something is going to happen here..
-                                    documentRef.doc(user.uid).collection('user_todo').doc(doc.id).delete();
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: colorsName,
-                                  size: 30,)),
-                          ),
-                        )).toList());
-              } else {
-                return Center(
-                  child: Container(child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Icon(Icons.hourglass_empty_outlined,
-                          color: colorsName, size: 100,),
-                        Text('Empty data..!'),
-                      ],
-                    ),
-                  ),),
-                );
+                if (documents.isNotEmpty) {
+                  return ListView(
+                      children: documents.
+                      map((doc) =>
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            shadowColor: Colors.black45,
+                            elevation: 10,
+                            child: ListTile(
+                              leading: Icon(
+                                Icons.event, color: Colors.black54, size: 30,),
+                              title: Text(doc['title'],
+                                style: TextStyle(fontSize: 15),),
+                              subtitle: Text(doc['date'],
+                                style: TextStyle(fontSize: 12),),
+                              // trailing: Icon(Icons.delete,color: colorsName,size: 30, ),
+                              trailing: IconButton(
+                                  tooltip: 'Delete',
+                                  onPressed: () {
+                                    setState(() {
+                                      //something is going to happen here..
+                                      documentRef.doc(user.uid).collection('user_todo').doc(doc.id).delete();
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: colorsName,
+                                    size: 30,)),
+                            ),
+                          )).toList());
+                } else {
+                  return Center(
+                    child: Container(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Icon(Icons.hourglass_empty_outlined,
+                            color: colorsName, size: 100,),
+                          Text('Empty data..!'),
+                        ],
+                      ),
+                    ),),
+                  );
+                }
+              } else if (snapShot.hasError) {
+                return Center(child: Container(child: Text("It's Error!")));
               }
-            } else if (snapShot.hasError) {
-              return Center(child: Container(child: Text("It's Error!")));
-            }
 
-            return Center(
-              child: Container(child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: CircularProgressIndicator(strokeWidth: 4,),
-                    ),
-                    Text('Loading..!'),
-                  ],
-                ),
-              ),),
-            );
-          });
+              return Center(
+                child: Container(child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: CircularProgressIndicator(strokeWidth: 4,),
+                      ),
+                      Text('Loading..!'),
+                    ],
+                  ),
+                ),),
+              );
+            }),
+      );
     }else{
-      print("Sorry! No user listed");
+       return new Center(child: Container(child: Text('Sorry no user found.'),));
     }
   }
 

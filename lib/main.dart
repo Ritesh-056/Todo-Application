@@ -1,4 +1,5 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_app/loginRegister/signUpPage.dart';
@@ -31,8 +32,11 @@ Future<void> main() async{
 
   class LoginDesign extends StatelessWidget {
 
+   var auth = FirebaseAuth.instance;
+
     @override
     Widget build(BuildContext context) {
+
       return MaterialApp(
         debugShowCheckedModeBanner: false,
          theme: ThemeData(
@@ -45,13 +49,32 @@ Future<void> main() async{
                 splash: new Image.asset('assets/Spinner.gif'),
                 splashTransition: SplashTransition.slideTransition,
                 backgroundColor:text_color_white,
-                nextScreen: new LoginPage(),
+                // nextScreen: new LoginPage(),
                 splashIconSize: 100,
-
+                nextScreen:CheckAuth(),
             ),
           )
 
       );
+    }
+
+  }
+
+
+
+  class CheckAuth extends StatelessWidget {
+
+   var auth = FirebaseAuth.instance;
+    @override
+    Widget build(BuildContext context) {
+
+        if(auth.currentUser?.uid == null){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginPage()));
+        }else{
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> TodoHome(email: auth.currentUser.email, password: null,)));
+        }
+
+
     }
   }
 

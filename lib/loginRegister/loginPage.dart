@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/bezierContainer.dart';
 import 'package:flutter_app/loginRegister/signUpPage.dart';
@@ -7,9 +8,9 @@ import '../components/alertDialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
+  LoginPage({Key key}) : super(key: key);
 
-  final String title;
+  // final String title;
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -19,9 +20,6 @@ class _LoginPageState extends State<LoginPage> {
 
   FirebaseAuth auth = FirebaseAuth.instance;
   Future<UserCredential> userCredential;
-
-
-
 
   String loginEmail="";
   String loginPassword="";
@@ -129,19 +127,20 @@ class _LoginPageState extends State<LoginPage> {
     return GestureDetector(
       onTap: (){
 
-        setState(() {
+
              if(loginEmail.isNotEmpty && loginPassword.isNotEmpty ){
                  userlogin(loginEmail,loginPassword);
+                 Navigator.push(context,MaterialPageRoute(builder: (context)=>TodoHome(email: loginEmail, password: loginPassword)));
+
                  print("Email:$loginEmail");
                  print("Password: $loginPassword");
 
-                 Navigator.push(context,MaterialPageRoute(builder: (context)=>TodoHome(email: loginEmail, password: loginPassword)));
+
              }else{
-                setState(() {
-                  showAlertDialog(context);
-                });
+                print('invalid');
              }
-        });
+
+
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
