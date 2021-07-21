@@ -8,8 +8,6 @@ import '../components/alertDialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
-
   // final String title;
 
   @override
@@ -17,155 +15,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
   Future<UserCredential> userCredential;
 
-  String loginEmail="";
-  String loginPassword="";
+  String loginEmail = "";
+  String loginPassword = "";
   // var textController = new TextEditingController();
-
-
-
-  void userlogin(String email, String password){
-
-    try {
-          userCredential =  auth.signInWithEmailAndPassword(
-          email: email,
-          password: password
-          );
-          print('Login Successfully');
-
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
-    }
-  }
-
-
-  Widget _backButton() {
-    return InkWell(
-      onTap: () {
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8,vertical: 8),
-        child: Row(
-          children: <Widget>[
-            Container(
-              child: Text('Welcome\nTask Tracker',
-                  style: TextStyle(fontSize: 18,color: colorsName, fontWeight: FontWeight.w500)),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _entryField(String title,String tracker,{bool isPassword = false}) {
-
-    Widget _checkField(){
-
-      if(tracker == "e"){
-        return new TextField(
-            onChanged: (val){
-              setState(() {
-                loginEmail = val;
-
-              });
-            },
-
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                fillColor: Color(0xfff5f5f6),
-                filled: true)
-        );
-
-      }else{
-        return new TextField(
-
-          // obscureText: isPassword,
-            onChanged: (val){
-              setState(() {
-                loginPassword = val;
-              });
-            },
-            obscureText: true,
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                fillColor: Color(0xfff5f5f6),
-                filled: true)
-        );
-      }
-
-    }
-
-
-
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          _checkField(),
-        ],
-      ),
-    );
-  }
-
-  Widget _submitButton() {
-    return GestureDetector(
-      onTap: (){
-
-
-             if(loginEmail.isNotEmpty && loginPassword.isNotEmpty ){
-                 userlogin(loginEmail,loginPassword);
-                 Navigator.push(context,MaterialPageRoute(builder: (context)=>TodoHome(email: loginEmail, password: loginPassword)));
-
-                 print("Email:$loginEmail");
-                 print("Password: $loginPassword");
-
-
-             }else{
-                print('invalid');
-             }
-
-
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(50)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [colorsName, colorsNameLess])),
-        child: Text(
-          'Login',
-          style: TextStyle(fontSize: 15, color: Colors.white,fontWeight: FontWeight.w600),
-        ),
-      ),
-    );
-  }
 
   Widget _divider() {
     return Container(
@@ -183,7 +40,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          Text('Social', style:TextStyle(fontSize: 13,fontWeight: FontWeight.w400)),
+          Text('Social',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400)),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -215,8 +73,8 @@ class _LoginPageState extends State<LoginPage> {
               decoration: BoxDecoration(
                 color: Color.fromRGBO(187, 0, 27, 0.9),
                 borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(50),
-                    topLeft: Radius.circular(50),
+                  bottomLeft: Radius.circular(50),
+                  topLeft: Radius.circular(50),
                 ),
               ),
               alignment: Alignment.center,
@@ -234,8 +92,8 @@ class _LoginPageState extends State<LoginPage> {
                 color: Color.fromRGBO(180, 0, 20, 0.9),
                 borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(50),
-                    topRight: Radius.circular(50)
-                ),),
+                    topRight: Radius.circular(50)),
+              ),
               alignment: Alignment.center,
               child: Text('Continue with Google',
                   style: TextStyle(
@@ -249,12 +107,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   Widget _createAccountLabel() {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage()));
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: (context) => SignUpPage()));
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
@@ -273,35 +130,11 @@ class _LoginPageState extends State<LoginPage> {
             Text(
               'Register',
               style: TextStyle(
-                  color: colorsName,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700),
+                  color: colorsName, fontSize: 13, fontWeight: FontWeight.w700),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _title() {
-    return Text(
-      'Login',
-      style: TextStyle(
-        color: colorsName,
-        fontSize: 20,
-        fontWeight: FontWeight.w700,
-
-      ),
-    );
-  }
-
-
-  Widget _emailPasswordWidget() {
-    return Column(
-      children: <Widget>[
-        _entryField("Email id","e"),
-        _entryField("Password","p",isPassword: true),
-      ],
     );
   }
 
@@ -310,44 +143,139 @@ class _LoginPageState extends State<LoginPage> {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
         body: Container(
-          height: height,
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                  top: -height * .15,
-                  right: -MediaQuery.of(context).size.width * .4,
-                  child: BezierContainer()),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: height * .2),
-                      _title(),
-                      SizedBox(height: 50),
-                      _emailPasswordWidget(),
-                      SizedBox(height: 20),
-                      _submitButton(),
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        alignment: Alignment.centerRight,
-                        child: Text('Forgot Password ?',
-                            style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w400)),
-                      ),
-                      _divider(),
-                      _facebookButton(),
-                      SizedBox(height: height * .055),
-                      _createAccountLabel(),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(top: 20, left: 0, child: _backButton()),
-            ],
+      height: height,
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+            top: 25,
+            left: 20,
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.green,
+            ),
           ),
-        ));
+          Positioned(
+              top: -height * .15,
+              right: -MediaQuery.of(context).size.width * .4,
+              child: BezierContainer()),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(height: height * .2),
+                  Text(
+                    'Login',
+                    style: TextStyle(
+                      color: colorsName,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(height: 50),
+                  TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                        labelText: 'Email',
+                        border: InputBorder.none,
+                        fillColor: Color(0xfff5f5f6),
+                        filled: true),
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                        labelText: 'Password',
+                        border: InputBorder.none,
+                        fillColor: Color(0xfff5f5f6),
+                        filled: true),
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      try {
+                        auth.signInWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text);
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
+                    child: Container(
+                      height: 50,
+                      child: Center(
+                        child: Text(
+                          'login',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.lightGreen,
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
+                  ),
+
+                  ///submit button
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    alignment: Alignment.centerRight,
+                    child: Text('Forgot Password ?',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w400)),
+                  ),
+                  _divider(),
+                  _facebookButton(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      print('tapped');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpPage()));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                      padding: EdgeInsets.all(15),
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Don\'t have an account ?',
+                            style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'Register',
+                            style: TextStyle(
+                                color: colorsName,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          // Positioned(top: 20, left: 0, child: _backButton()),
+        ],
+      ),
+    ));
   }
 }
