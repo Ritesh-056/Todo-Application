@@ -33,7 +33,7 @@ class LoginDesign extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.green,
+          primaryColor: colorsName,
           fontFamily: 'Monotype Coursiva', //3, //3
         ),
         home: new SafeArea(
@@ -43,7 +43,6 @@ class LoginDesign extends StatelessWidget {
               splash: new Image.asset('assets/Spinner.gif'),
               splashTransition: SplashTransition.slideTransition,
               backgroundColor: text_color_white,
-              // nextScreen: new LoginPage(),
               splashIconSize: 100,
               nextScreen: auth.currentUser?.uid == null
                   ? LoginPage()
@@ -54,24 +53,3 @@ class LoginDesign extends StatelessWidget {
   }
 }
 
-///in checkAuth class your were not returning anything but it is expected to return a widget.
-///Ritesh sir, you created a StateLessWidget just to check the condition which could have been done
-///by using simple ternary operator as shown above
-// class CheckAuth extends StatelessWidget {
-//   var auth = FirebaseAuth.instance;
-//   @override
-//   Widget build(BuildContext context) {
-//     if (auth.currentUser?.uid == null) {
-//       Navigator.pushReplacement(
-//           context, MaterialPageRoute(builder: (context) => LoginPage()));
-//     } else {
-//       Navigator.push(
-//           context,
-//           MaterialPageRoute(
-//               builder: (context) => TodoHome(
-//                     email: auth.currentUser.email,
-//                     password: null,
-//                   )));
-//     }
-//   }
-// }

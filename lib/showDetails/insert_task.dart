@@ -34,6 +34,7 @@ class _AddTaskHomeState extends State<AddTaskHome> {
 
           floatingActionButton: FloatingActionButton(
             child:Icon(Icons.close),
+            backgroundColor: colorsName,
             onPressed: (){
               setState(() {
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>TodoHome()));
@@ -89,7 +90,6 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                                   hintText: "Insert Task",
                                   border: InputBorder.none
                               ),
-                              controller: eCtrl,
                               onChanged: (value){
                                 listItem =value;
                               }
@@ -140,7 +140,6 @@ class _AddTaskHomeState extends State<AddTaskHome> {
 
                                 if( user.uid !=null){
                                   documentRef.doc(auth.currentUser.uid).collection('user_todo').doc().set({'title' : listItem ,'date' : dateTimePicker });
-                                  eCtrl.clear();
                                   listItem =null;
                                   dateTimePicker=null;
                                 }else{

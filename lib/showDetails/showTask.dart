@@ -8,6 +8,7 @@ import 'package:flutter_app/loginRegister/loginPage.dart';
 import 'package:flutter_app/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app/showDetails/insert_task.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 
 
@@ -29,8 +30,10 @@ class TodoHome extends StatefulWidget {
 
 class _TodoHomeState extends State<TodoHome> {
 
+  var counter=0;
   FirebaseAuth auth = FirebaseAuth.instance;
   User user =   FirebaseAuth.instance.currentUser;
+  GoogleSignIn _googleSignIn = GoogleSignIn();
   var documentRef = FirebaseFirestore.instance.collection('todos');
 
 
@@ -44,7 +47,7 @@ class _TodoHomeState extends State<TodoHome> {
     return SafeArea(
         child: Scaffold(
           appBar: AppBar(
-
+            backgroundColor: colorsName,
             title: Text('Task', style: TextStyle ( fontWeight: FontWeight.w500, fontSize: 20)),
             actions: [
               PopupMenuButton(
@@ -52,20 +55,21 @@ class _TodoHomeState extends State<TodoHome> {
                 [
                   PopupMenuItem<int>(
                     value: 0,
-                    child: Text("Settings", style: TextStyle(
+                    child: Text("Theme", style: TextStyle(
                         fontSize: 13, fontWeight: FontWeight.w600),),
                   ),
                   PopupMenuItem<int>(
                     value: 1,
+                    child: Text("Sign out", style: TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w600),),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 2,
                     child: Text("Exit", style: TextStyle(
                         fontSize: 13, fontWeight: FontWeight.w600),),
                   ),
 
-                  PopupMenuItem<int>(
-                    value: 2,
-                    child: Text("Sign out", style: TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w600),),
-                  ),
+
                 ],
                 onSelected: (item) => SelectedItem(context, item),
               ),
@@ -75,6 +79,7 @@ class _TodoHomeState extends State<TodoHome> {
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             tooltip: 'Add task',
+            backgroundColor: colorsName,
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => AddTaskHome()));
@@ -166,25 +171,44 @@ class _TodoHomeState extends State<TodoHome> {
   Future<void> SelectedItem(BuildContext context, item) async {
     switch (item) {
       case 0:
+
+        setState(() {
+          if(counter % 2 ==0){
+            colorsName = Color.fromRGBO(187, 0, 27, 0.9);
+            print("Red is called=> $counter");
+          }else{
+            colorsName = Color.fromRGBO(27, 187, 0, 0.9);
+            print("Green is called=> $counter");
+          }
+            counter++;
+        });
+
         break;
       case 1:
-        show_alertDialog(context);
-        break;
-
-      case 2:
         if(auth.currentUser?.uid !=null){
-            _signOut();
+          _signOutFirebase();
+          _signOutGoogle();
         }else{
           print("No user found...!");
         }
         // Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+        break;
+
+      case 2:
+        show_alertDialog(context);
+
     }
   }
 
 
-  Future <LoginPage> _signOut()  async{
+  Future <LoginPage> _signOutFirebase()  async{
    await FirebaseAuth.instance.signOut();
    Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+  }
+
+  Future <LoginPage> _signOutGoogle()  async{
+    await _googleSignIn.signOut();
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
   }
 
 
@@ -254,7 +278,7 @@ class _TodoHomeState extends State<TodoHome> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: CircularProgressIndicator(strokeWidth: 4,),
+                        child: CircularProgressIndicator(strokeWidth: 4,color: colorsName,),
                       ),
                       Text('Loading..!'),
                     ],
