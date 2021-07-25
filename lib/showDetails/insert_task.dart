@@ -3,7 +3,6 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/showDetails/showTask.dart';
-
 import '../main.dart';
 
 class AddTaskHome extends StatefulWidget {
@@ -15,14 +14,14 @@ class AddTaskHome extends StatefulWidget {
 
 class _AddTaskHomeState extends State<AddTaskHome> {
   final TextEditingController eCtrl = new TextEditingController();
-  var listItem ="";
+  var listItem       ="";
   var dateTimePicker ="";
 
 
 
   FirebaseAuth auth  = FirebaseAuth.instance;
-  User user =   FirebaseAuth.instance.currentUser;
-  var documentRef = FirebaseFirestore.instance.collection('todos');
+  User user          = FirebaseAuth.instance.currentUser;
+  var documentRef    = FirebaseFirestore.instance.collection('todos');
 
 
 
@@ -30,17 +29,22 @@ class _AddTaskHomeState extends State<AddTaskHome> {
   @override
   Widget build(BuildContext context) {
     return new SafeArea(
-        child: Scaffold(
 
+        child: Scaffold(
           floatingActionButton: FloatingActionButton(
             child:Icon(Icons.close),
             backgroundColor: colorsName,
             onPressed: (){
               setState(() {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>TodoHome()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>TodoHome()
+                    ));
               });
             },
           ),
+
 
           body:Center(
             child: new Stack(
@@ -53,8 +57,16 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                     right: 20,
                     child:Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Center(child: new Text('Assign your Task',style: TextStyle(color: colorsName, fontSize: 18, fontWeight: FontWeight.bold),)),
-                    ),),
+                      child: Center(
+                          child: new Text(
+                            'Assign your Task',
+                            style: TextStyle(
+                                color: colorsName,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),)
+                      ),
+                    ),
+                  ),
                   Positioned(
                     top:-48.0,
                     left: 65,
@@ -62,7 +74,8 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                     child:Divider(
                       thickness: 3,
                       color: colorsName,
-                    ),),
+                    ),
+                  ),
                   new Container(
                     height: 200,
                     width: 330,
@@ -95,6 +108,7 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                               }
                           ),
                         ),
+
                         Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child:DateTimePicker(
@@ -108,7 +122,8 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                                 timeLabelText: "Hour",
                                 selectableDayPredicate: (date) {
                                   // Disable weekend days to select from the calendar
-                                  if (date.weekday == 6 || date.weekday == 7) {
+                                  if (date.weekday == 6 ||
+                                      date.weekday == 7) {
                                     return false;
                                   }
                                   return true;
@@ -135,17 +150,26 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                         new GestureDetector(
                           onTap: (){
                             setState(() {
-                              if(listItem.isNotEmpty && dateTimePicker.isNotEmpty){
-
+                              if( listItem.isNotEmpty &&
+                                  dateTimePicker.isNotEmpty){
 
                                 if( user.uid !=null){
-                                  documentRef.doc(auth.currentUser.uid).collection('user_todo').doc().set({'title' : listItem ,'date' : dateTimePicker });
+                                  documentRef
+                                      .doc(auth.currentUser.uid)
+                                      .collection('user_todo')
+                                      .doc()
+                                      .set({'title' : listItem ,
+                                            'date' : dateTimePicker }
+                                            );
                                   listItem =null;
                                   dateTimePicker=null;
                                 }else{
                                   print("User is called on a null");
                                 }
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>TodoHome()));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context)=>TodoHome()));
                               }else{
 
                                 showModalBottomSheet(
@@ -157,9 +181,13 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             ListTile(
-                                              leading: new Icon(Icons.error, size: 50,
+                                              leading: new Icon(
+                                                Icons.error,
+                                                size: 50,
                                                 color: Color.fromRGBO(180, 0, 20, 0.9),),
-                                              title: new Text('Oops...!', style: TextStyle(
+                                              title: new Text(
+                                                  'Oops...!',
+                                                  style: TextStyle(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w700)),
                                               subtitle: new Text(
@@ -188,12 +216,21 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: new Container(
                               height:50,
-                              width:MediaQuery.of(context).size.width,
+                              width:MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: colorsName,
                               ),
-                              child: Center(child: Text('Assign',style: TextStyle(color: text_color_white, fontSize: 16),)),
+                              child: Center(
+                                  child: Text(
+                                    'Assign',
+                                    style: TextStyle(
+                                        color: text_color_white,
+                                        fontSize: 16),
+                                  )),
                             ),
                           ),
                         )

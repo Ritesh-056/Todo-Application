@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_app/loginRegister/signUpPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 import 'showDetails/showTask.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 //flutter packages importing
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,7 +19,7 @@ const text_color_white = Colors.white;
 const padding_number = 8.0;
 
 Color colorsName = Colors.green[500];
-Color colorsNameLess = Colors.green[600];
+
 
 // this is main methods for
 Future<void> main() async {
@@ -24,6 +27,8 @@ Future<void> main() async {
   await Firebase.initializeApp();
   runApp(LoginDesign());
 }
+
+
 
 class LoginDesign extends StatelessWidget {
   var auth = FirebaseAuth.instance;
@@ -49,7 +54,8 @@ class LoginDesign extends StatelessWidget {
                   : TodoHome(email: auth.currentUser.email, password: null),
             ),
           ),
-        ));
+        ),
+    );
   }
 }
 

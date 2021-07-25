@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/main.dart';
 
-
-
 //  custom text
-
- _text( title, size,color,weight){
-  var text = Text(
+Widget _text( title, size,color,weight){
+  return Text(
     title,
     style:TextStyle(
         fontSize: size,
@@ -14,5 +11,5 @@ import 'package:flutter_app/main.dart';
         fontWeight: weight
     ),
   );
-  return text;
+
 }

@@ -56,11 +56,20 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Row(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: colorsName,size: 40,),
+              padding: EdgeInsets.only(
+                  left: 0,
+                  top: 10,
+                  bottom: 10),
+              child: Icon(
+                Icons.keyboard_arrow_left,
+                color: colorsName,
+                size: 40,),
             ),
             Text('Back',
-                style: TextStyle(fontSize: 15, color: colorsName, fontWeight: FontWeight.w500))
+                style: TextStyle(
+                    fontSize: 15,
+                    color: colorsName,
+                    fontWeight: FontWeight.w500))
           ],
         ),
       ),
@@ -170,7 +179,7 @@ class _SignUpPageState extends State<SignUpPage> {
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: [ colorsName, colorsNameLess])),
+                colors: [ colorsName, colorsName])),
         child: Text(
           'Sign Up',
           style: TextStyle(fontSize: 15, color: Colors.white,fontWeight: FontWeight.w600),

@@ -45,6 +45,7 @@ dependencies:
   date_time_picker: ^2.1.0
   firebase_auth: ^3.0.1
   google_sign_in: ^5.0.4
+  flutter_easyloading: ^3.0.0
 
 #  media_player: ^0.0.7
 
