@@ -20,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _passwordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
   Future<UserCredential> userCredential;
+  bool isLoading = false;
 
   String loginEmail = "";
   String loginPassword = "";
@@ -61,7 +62,10 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _GoogleButton() {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
+        setState(() {
+          isLoading = true;
+        });
         signInWithGoogle();
       },
       child: Container(
@@ -100,11 +104,15 @@ class _LoginPageState extends State<LoginPage> {
                       topRight: Radius.circular(50)),
                 ),
                 alignment: Alignment.center,
-                child: Text('Continue with Google',
-                    style: TextStyle(
+                child: isLoading
+                    ? CircularProgressIndicator(
                         color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600)),
+                      )
+                    : Text('Continue with Google',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
               ),
             ),
           ],
@@ -285,30 +293,28 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 
-
-
   //function to login user from google
-    Future<UserCredential> signInWithGoogle() async {
-      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-       var checkAuth =  await auth.signInWithCredential(credential);
-       if(checkAuth.user.uid !=null){
-         return Navigator.push(context,
-             MaterialPageRoute(builder:
-                 (context)=>
-                     TodoHome(email: checkAuth.user.email,
-                              password: null)
-             )
-         );
-       }else{
-         print("No aacount signed in");
-       }
-
+    var checkAuth = await auth.signInWithCredential(credential);
+    if (checkAuth.user.uid != null) {
+      setState(() {
+        isLoading = false;
+      });
+      return Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  TodoHome(email: checkAuth.user.email, password: null)));
+    } else {
+      print("No aacount signed in");
+    }
   }
-
 }
