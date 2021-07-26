@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/bezierContainer.dart';
+import 'package:flutter_app/loginRegister/loginPage.dart';
 import 'package:flutter_app/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -25,6 +26,16 @@ class _SignUpPageState extends State<SignUpPage> {
   String registerUsername ="";
 
 
+  Widget toast(text){
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 5,
+        fontSize: 16.0
+    );
+  }
+
   void registerUser(String email , String password){
 
     try {
@@ -32,6 +43,9 @@ class _SignUpPageState extends State<SignUpPage> {
           email: registerEmail,
           password: registerPassword
       );
+          toast('Sign Up successful');
+          Navigator.push(
+            context,MaterialPageRoute(builder: (context)=>LoginPage()));
 
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -83,9 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
       if(tracker == "e"){
         return new TextField(
             onChanged: (val){
-              setState(() {
                 registerEmail = val;
-              });
             },
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
@@ -98,10 +110,7 @@ class _SignUpPageState extends State<SignUpPage> {
         return new TextField(
           // obscureText: isPassword,
             onChanged: (val){
-              setState(() {
                 registerPassword = val;
-
-              });
             },
             obscureText: true,
             decoration: InputDecoration(
@@ -113,9 +122,7 @@ class _SignUpPageState extends State<SignUpPage> {
           return new TextField(
           // obscureText: isPassword,
           onChanged: (val){
-                  setState(() {
                   registerUsername = val;
-                  });
           },
           decoration: InputDecoration(
           border: InputBorder.none,
@@ -153,13 +160,7 @@ class _SignUpPageState extends State<SignUpPage> {
             if(registerEmail.length > 0  && registerPassword.length >0  && registerUsername.length > 0){
               registerUser(registerEmail, registerPassword);
             }else{
-              Fluttertoast.showToast(
-                  msg: "Oops..! Make sure you have inserted your email, password and username.",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 5,
-                  fontSize: 16.0
-              );
+              toast("Oops..! Make sure you have inserted your email, password and username.");
             }
         });
       },
