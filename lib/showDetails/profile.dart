@@ -47,7 +47,7 @@ FirebaseAuth _auth = FirebaseAuth.instance;
                         width: 100,
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundImage:NetworkImage("${_auth.currentUser.photoURL}"),
+                          backgroundImage:NetworkImage("${_auth?.currentUser?.photoURL}"),
                         ),
                         decoration: new BoxDecoration(
                           shape: BoxShape.circle,
@@ -58,11 +58,11 @@ FirebaseAuth _auth = FirebaseAuth.instance;
                         ),
                       ),
 
-                      _text("${_auth.currentUser.displayName}",
+                      _text("${_auth?.currentUser?.displayName}",
                           15.0,
                           null,
                           FontWeight.w500 ),
-                      _text("${_auth.currentUser.email}",
+                      _text("${_auth?.currentUser?.email}",
                           13.0,
                           null,
                           FontWeight.w500 ),

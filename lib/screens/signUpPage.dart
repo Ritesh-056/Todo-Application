@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/bezierContainer.dart';
-import 'package:flutter_app/loginRegister/loginPage.dart';
 import 'package:flutter_app/main.dart';
+import 'package:flutter_app/screens/loginPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -20,7 +20,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
 
-  var textEditingController = new TextEditingController();
+  var _emailController = new TextEditingController();
+  var _passwordController = new TextEditingController();
+  var _userNameController = new TextEditingController();
+
   String registerEmail    ="";
   String registerPassword ="";
   String registerUsername ="";
@@ -35,31 +38,46 @@ class _SignUpPageState extends State<SignUpPage> {
         fontSize: 16.0
     );
   }
+  Widget _modelBox(text){
 
-  void registerUser(String email , String password){
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  leading: new Icon(
+                    Icons.error,
+                    size: 50,
+                    color: Color.fromRGBO(180, 0, 20, 0.9),),
+                  title: new Text(
+                      'Oops...!',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700)),
+                  subtitle: new Text(
+                      text,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700)),
+                  trailing: new IconButton(
+                    icon: Icon(Icons.close),
+                    iconSize: 20,
+                    color: Color.fromRGBO(20, 20, 20, 0.9),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
 
-    try {
-          userCredential = auth.createUserWithEmailAndPassword(
-          email: registerEmail,
-          password: registerPassword
-      );
-          toast('Sign Up successful');
-          Navigator.push(
-            context,MaterialPageRoute(builder: (context)=>LoginPage()));
-
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
+                ),
+              ],
+            ),
+          );
+        });
   }
-
-
-
 
   Widget _backButton() {
     return InkWell(
@@ -96,10 +114,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
       if(tracker == "e"){
         return new TextField(
-            onChanged: (val){
-                registerEmail = val;
-            },
             keyboardType: TextInputType.emailAddress,
+            controller: _emailController,
             decoration: InputDecoration(
                 border: InputBorder.none,
                 fillColor: Color(0xfff5f5f6),
@@ -108,11 +124,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
       }else if( tracker  == "p"){
         return new TextField(
-          // obscureText: isPassword,
-            onChanged: (val){
-                registerPassword = val;
-            },
             obscureText: true,
+            controller: _passwordController,
             decoration: InputDecoration(
                 border: InputBorder.none,
                 fillColor: Color(0xfff5f5f6),
@@ -120,10 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
         );
       }else{
           return new TextField(
-          // obscureText: isPassword,
-          onChanged: (val){
-                  registerUsername = val;
-          },
+          controller: _userNameController,
           decoration: InputDecoration(
           border: InputBorder.none,
           fillColor: Color(0xfff5f5f6),
@@ -155,14 +165,35 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _submitButton() {
     return GestureDetector(
-      onTap: (){
-        setState(() {
-            if(registerEmail.length > 0  && registerPassword.length >0  && registerUsername.length > 0){
-              registerUser(registerEmail, registerPassword);
-            }else{
-              toast("Oops..! Make sure you have inserted your email, password and username.");
+      onTap: () async {
+
+            try{
+              if(_emailController.text.length > 0 &&
+                  _passwordController.text.length >0  &&
+                  _userNameController.text.length > 0){
+
+                     await  auth.createUserWithEmailAndPassword(
+                    email: _emailController.text,
+                    password: _passwordController.text);
+
+                toast('SignUp Successful...!');
+                Navigator.push(
+                    context,MaterialPageRoute(builder: (context)=>LoginPage()));
+
+
+              }else{
+                _modelBox("Make sure you have inserted your email, password and username.");
+              }
+            } on FirebaseAuthException catch (e){
+              _modelBox('${e.message}');
+              print("========Error[firebaseAuth]========");
+              print(e.message);
+            } catch(ex){
+               _modelBox('${ex.toString()}');
+               print("========Error[Catch]========");
+               print(ex.message);
+
             }
-        });
       },
       child: Container(
         width: MediaQuery.of(context).size.width,

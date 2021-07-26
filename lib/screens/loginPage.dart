@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/bezierContainer.dart';
-import 'package:flutter_app/loginRegister/signUpPage.dart';
+import 'package:flutter_app/screens/forget_password.dart';
+import 'package:flutter_app/screens/signUpPage.dart';
 import 'package:flutter_app/showDetails/showTask.dart';
 import 'package:flutter_app/main.dart';
 import '../components/alertDialog.dart';
@@ -61,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  Widget dialog(BuildContext context){
+  Widget dialog(){
    showDialog(
       context: context,
       barrierDismissible: false,
@@ -228,6 +229,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 10,),
                     TextField(
                       controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           fillColor: Color(0xfff5f5f6),
@@ -250,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 50,
                     ),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         String errorMessage="";
                         try{
                           if(_emailController.text.length ==0 &&
@@ -259,51 +261,38 @@ class _LoginPageState extends State<LoginPage> {
                              _modelBox('Make sure you have inserted email and password.');
                             
                           }else{
-                            auth.signInWithEmailAndPassword(
+                           await auth.signInWithEmailAndPassword(
                                 email: _emailController.text,
                                 password: _passwordController.text);
 
-
                             if(auth.currentUser.uid !=null){
-                                return Navigator.push(
+                                Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                 builder: (context) =>
                                 TodoHome(email: auth.currentUser.email, password: null)));
-                                } else {
-                                print("No account signed in");
+
+
+                                _emailController.clear();
+                                _passwordController.clear();
+
+                               } else {
+                                  _modelBox('No account signed in.');
                                 }
 
                             }
-                          }
+                          } on FirebaseAuthException catch(ex){
+                            print("==========Error[FirebaseAuth]=============");
+                            print('${ex.message}');
+                            _modelBox('${ex.message}');
 
-                           catch (error) {
-                              switch (error.code) {
-                              case "ERROR_INVALID_EMAIL":
-                              errorMessage = "Your email address appears to be malformed.";
-                              break;
-                              case "ERROR_WRONG_PASSWORD":
-                              errorMessage = "Your password is wrong.";
-                              break;
-                              case "ERROR_USER_NOT_FOUND":
-                              errorMessage = "User with this email doesn't exist.";
-                              break;
-                              case "ERROR_USER_DISABLED":
-                              errorMessage = "User with this email has been disabled.";
-                              break;
-                              case "ERROR_TOO_MANY_REQUESTS":
-                              errorMessage = "Too many requests. Try again later.";
-                              break;
-                              case "ERROR_OPERATION_NOT_ALLOWED":
-                              errorMessage = "Signing in with Email and Password is not enabled.";
-                              break;
-                              default:
-                              errorMessage = "An undefined Error happened.";
-                              }
+                        } catch(e){
+                          print("==========Error[catch]=============");
+                          print('${e.toString()}');
+                          _modelBox('${e.toString()}');
 
-                              return _modelBox(errorMessage.toString());
-                          }
-                          },
+                        }
+                        },
                       child: Container(
                         height: 50,
                         child: Center(
@@ -320,14 +309,21 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(20)),
                       ),
                     ),
-
                     ///submit button
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
                       alignment: Alignment.centerRight,
-                      child: Text('Forgot Password ?',
-                          style: TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w400)),
+                      child: TextButton(
+                        onPressed: () { Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context)=>ForgetPassword()));
+                      },
+                        child: Text('Forgot Password ?',
+                        style: TextStyle(
+                            fontSize: 13,
+                            color:colorsName,
+                            fontWeight: FontWeight.w400)
+                        ),),
                     ),
                     _divider(),
                     _GoogleButton(),
@@ -378,6 +374,8 @@ class _LoginPageState extends State<LoginPage> {
       )),
     );
   }
+
+
 
   //function to login user from google
   Future<UserCredential> signInWithGoogle() async {

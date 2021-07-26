@@ -4,7 +4,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter_app/loginRegister/signUpPage.dart';
+import 'package:flutter_app/screens/signUpPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 import 'showDetails/showTask.dart';
@@ -13,7 +13,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 //flutter packages importing
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'loginRegister/loginPage.dart';
+import 'screens/loginPage.dart';
 
 const text_color_white = Colors.white;
 const padding_number = 8.0;
