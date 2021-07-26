@@ -4,6 +4,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_app/components/check_connectivity.dart';
 import 'package:flutter_app/screens/signUpPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
