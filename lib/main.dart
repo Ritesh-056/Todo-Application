@@ -21,7 +21,6 @@ const padding_number = 8.0;
 
 Color colorsName = Colors.green[500];
 
-
 // this is main methods for
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,34 +28,34 @@ Future<void> main() async {
   runApp(LoginDesign());
 }
 
-
-
 class LoginDesign extends StatelessWidget {
   var auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primaryColor: colorsName,
-          fontFamily: 'Monotype Coursiva', //3, //3
-        ),
-        home: new SafeArea(
-          child: Scaffold(
-            body: AnimatedSplashScreen(
-              duration: 3000,
-              splash: new Image.asset('assets/Spinner.gif'),
-              splashTransition: SplashTransition.slideTransition,
-              backgroundColor: text_color_white,
-              splashIconSize: 100,
-              nextScreen: auth.currentUser?.uid == null
-                  ? LoginPage()
-                  : TodoHome(email: auth.currentUser.email, password: null),
-            ),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        accentColor: colorsName,
+
+        primaryColor: colorsName,
+
+        fontFamily: 'Monotype Coursiva', //3, //3
+      ),
+      home: new SafeArea(
+        child: Scaffold(
+          body: AnimatedSplashScreen(
+            duration: 3000,
+            splash: new Image.asset('assets/Spinner.gif'),
+            splashTransition: SplashTransition.slideTransition,
+            backgroundColor: text_color_white,
+            splashIconSize: 100,
+            nextScreen: auth.currentUser?.uid == null
+                ? LoginPage()
+                : TodoHome(email: auth.currentUser.email, password: null),
           ),
         ),
+      ),
     );
   }
 }
-
