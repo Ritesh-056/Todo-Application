@@ -271,7 +271,6 @@ class _LoginPageState extends State<LoginPage> {
                                 MaterialPageRoute(
                                 builder: (context) =>
                                 TodoHome(email: auth.currentUser.email, password: null)));
-
                                 _emailController.clear();
                                 _passwordController.clear();
 

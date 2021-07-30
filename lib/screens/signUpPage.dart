@@ -20,7 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
 
-  var _emailController = new TextEditingController();
+  var _emailController    = new TextEditingController();
   var _passwordController = new TextEditingController();
   var _userNameController = new TextEditingController();
 

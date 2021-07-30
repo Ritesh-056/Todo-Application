@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:isolate';
+import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -26,6 +28,8 @@ class TodoHome extends StatefulWidget {
 class _TodoHomeState extends State<TodoHome> {
 
   var counter=0;
+  int helloAlarmID = 1;
+  var itemValue;
   final TextEditingController eCtrl = new TextEditingController();
 
 
@@ -186,6 +190,7 @@ class _TodoHomeState extends State<TodoHome> {
                 final List<DocumentSnapshot> documents = snapShot.data.docs;
 
                 if (documents.isNotEmpty) {
+
                   return ListView(
                       children: documents.
                       map((doc) =>

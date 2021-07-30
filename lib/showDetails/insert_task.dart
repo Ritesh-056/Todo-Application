@@ -86,7 +86,6 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                       child: new TextField(
                           cursorColor: colorsName,
                           restorationId: "email_id",
-                          style: TextStyle(color: colorsName),
                           decoration: InputDecoration(
                               hintText: "Insert Task",
                               border: InputBorder.none),

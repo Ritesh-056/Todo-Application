@@ -1,13 +1,15 @@
 import 'dart:async';
-
+import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_app/components/check_connectivity.dart';
 import 'package:flutter_app/screens/signUpPage.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
+import 'components/notification_manager.dart';
 import 'showDetails/showTask.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -21,11 +23,13 @@ const padding_number = 8.0;
 
 Color colorsName = Colors.green[500];
 
+
 // this is main methods for
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(LoginDesign());
+
 }
 
 class LoginDesign extends StatelessWidget {
@@ -33,13 +37,13 @@ class LoginDesign extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         accentColor: colorsName,
-
         primaryColor: colorsName,
-
         fontFamily: 'Monotype Coursiva', //3, //3
       ),
       home: new SafeArea(
@@ -50,9 +54,13 @@ class LoginDesign extends StatelessWidget {
             splashTransition: SplashTransition.slideTransition,
             backgroundColor: text_color_white,
             splashIconSize: 100,
-            nextScreen: auth.currentUser?.uid == null
-                ? LoginPage()
-                : TodoHome(email: auth.currentUser.email, password: null),
+            nextScreen: CheckConnectivity(),
+            // nextScreen: NotificationManager(title: 'Hello I am working  here',taskTime: '12023',),
+            // nextScreen: auth.currentUser?.uid == null
+            //     ? LoginPage()
+            //     : TodoHome(
+            //     email: auth.currentUser.email,
+            //     password: null),
           ),
         ),
       ),
