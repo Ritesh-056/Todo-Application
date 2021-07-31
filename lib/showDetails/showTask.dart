@@ -346,19 +346,16 @@ class _TodoHomeState extends State<TodoHome> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-         Expanded(
+         ColorPicker(
+         pickerColor: Colors.red,
+         pickerAreaHeightPercent: 0.5,
+         onColorChanged: (colors){
+           setState(() {
+             colorsName = colors ;
+           });
 
-          child: ColorPicker(
-          pickerColor: Colors.red,
-          pickerAreaHeightPercent: 0.5,
-          onColorChanged: (colors){
-            setState(() {
-              colorsName = colors ;
-            });
-
-           },
+          },
        ),
-        ),
           SizedBox(height: 20,),
           TextButton(
             child:Text('SELECT',
