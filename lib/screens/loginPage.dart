@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/components/addition.dart';
 import 'package:flutter_app/components/bezierContainer.dart';
+import 'package:flutter_app/components/check_connectivity.dart';
 import 'package:flutter_app/screens/forget_password.dart';
 import 'package:flutter_app/screens/signUpPage.dart';
 import 'package:flutter_app/showDetails/showTask.dart';
@@ -25,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
   String loginEmail = "";
   String loginPassword = "";
-  // var textController = new TextEditingController();
+
 
   Widget _divider() {
     return Container(
@@ -44,7 +46,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           Text('Social',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400)),
+              style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400)
+          ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -133,7 +138,8 @@ class _LoginPageState extends State<LoginPage> {
         height: 50,
         margin: EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.all(
+              Radius.circular(10)),
         ),
         child: Row(
           children: <Widget>[
@@ -167,7 +173,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 alignment: Alignment.center,
                 child: isLoading
-                    ? CircularProgressIndicator(color: Colors.white)
+                    ? CircularProgressIndicator(
+                    color: Colors.white)
                     : Text('Continue with Google',
                         style: TextStyle(
                             color: Colors.white,
@@ -201,7 +208,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Positioned(
                 top: -height * .15,
-                right: -MediaQuery.of(context).size.width * .4,
+                right: -MediaQuery
+                    .of(context)
+                    .size
+                    .width * .4,
                 child: BezierContainer()),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -224,7 +234,9 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 50),
                     Text(
                       'Email',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14),
                     ),
                     SizedBox(height: 10,),
                     TextField(
@@ -238,7 +250,9 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 20),
                     Text(
                       'Password',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14),
                     ),
                     SizedBox(height: 10,),
                     TextField(
@@ -253,8 +267,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     InkWell(
                       onTap: () async {
-                        String errorMessage="";
                         try{
+
                           if(_emailController.text.length ==0 &&
                              _passwordController.text.length ==0){
                             

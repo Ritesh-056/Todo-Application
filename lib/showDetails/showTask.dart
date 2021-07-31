@@ -8,6 +8,7 @@ import 'package:flutter_app/screens/loginPage.dart';
 import 'package:flutter_app/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app/showDetails/insert_task.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -37,6 +38,7 @@ class _TodoHomeState extends State<TodoHome> {
   User user                  = FirebaseAuth.instance.currentUser;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   var documentRef            = FirebaseFirestore.instance.collection('todos');
+
 
 
 
@@ -122,16 +124,32 @@ class _TodoHomeState extends State<TodoHome> {
   Future<void> SelectedItem(BuildContext context, item) async {
     switch (item) {
       case 0:
-        setState(() {
-          if(counter % 2 ==0){
-            colorsName = Color.fromRGBO(187, 0, 27, 0.9);
-            print("Red is called=> $counter");
-          }else{
-            colorsName = Color.fromRGBO(27, 187, 0, 0.9);
-            print("Green is called=> $counter");
-          }
-            counter++;
-        });
+        // setState(() {
+        //   if(counter % 2 ==0){
+        //     colorsName = Color.fromRGBO(187, 0, 27, 0.9);
+        //     print("Red is called=> $counter");
+        //   }else{
+        //     colorsName = Color.fromRGBO(27, 187, 0, 0.9);
+        //     print("Green is called=> $counter");
+        //   }
+        //     counter++;
+        // });
+
+         // return new Container(
+         //   child:Column(
+         //      children: [
+         //        ElevatedButton(
+         //          child: Text('Pick'),
+         //          onPressed: (){
+         //             pickColor(context);
+         //          },
+         //            )
+         //      ],
+         //   )
+         // );
+
+         // pickColor(context);
+        colorPickerAlertDialog(context);
         break;
 
       case 1:
@@ -144,7 +162,7 @@ class _TodoHomeState extends State<TodoHome> {
         break;
 
       case 2:
-        show_alertDialog(context);
+        showAlertDialog(context);
         break;
 
       case 3:
@@ -156,6 +174,47 @@ class _TodoHomeState extends State<TodoHome> {
         break;
 
     }
+  }
+
+  showAlertDialog(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+          Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Exit"),
+      onPressed:  () {
+        exit(0);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Center(
+        child: Text("Exit App",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+      ),
+      content: Text("Are you sure want to exit ?",
+          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
 
@@ -267,40 +326,95 @@ class _TodoHomeState extends State<TodoHome> {
 
 
 
-  show_alertDialog(BuildContext context){
+  colorPickerAlertDialog(BuildContext context) {
+
+    // // set up the buttons
+    // Widget cancelButton = TextButton(
+    //   child: Text("SELECT"),
+    //   onPressed:  () {
+    //     Navigator.pop(context);
+    //   },
+    // );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title:Center(
+        child: Text('Pick Your Color',
+          style: TextStyle(fontSize: 13),
+        ),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+         Expanded(
+
+          child: ColorPicker(
+          pickerColor: Colors.red,
+          pickerAreaHeightPercent: 0.5,
+          onColorChanged: (colors){
+            setState(() {
+              colorsName = colors ;
+            });
+
+           },
+       ),
+        ),
+          SizedBox(height: 20,),
+          TextButton(
+            child:Text('SELECT',
+              style:TextStyle(fontSize: 13),
+            ),
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+
+
+    );
+
+    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return new AlertDialog(
-          title: Center(child: Text("Exit App",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),)),
-          content: Center(
-            child: Text("Are you sure want to exit ?",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-          ),
-          actions: [
-            FlatButton(onPressed: () {
-              Navigator.pop(context);
-            },
-                child: Text('NO', style: TextStyle(fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: colorsName))),
-
-            FlatButton(onPressed: () {
-              exit(0);
-            },
-                child: Text('YES', style: TextStyle(fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: colorsName))),
-
-
-          ],
-        );
+        return alert;
       },
     );
   }
 
-
+  // void pickColor(BuildContext context) {
+  //     showDialog(
+  //         context: context,
+  //         builder: (context)=>AlertDialog(
+  //           title:Center(
+  //             child: Text('Pick Your Color',
+  //             style: TextStyle(fontSize: 15),
+  //             ),
+  //           ),
+  //           content:
+  //               Container(
+  //                 child: Column(
+  //                   children: [
+  //                     buildColorPicker(),
+  //                     SizedBox(height: 20,),
+  //                     TextButton(
+  //                       child:Text('SELECT',
+  //                         style:TextStyle(fontSize: 13),
+  //                       ),
+  //                       onPressed: (){
+  //                         Navigator.of(context).pop();
+  //                       },
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //
+  //
+  //           ));
+  //
+  // }
+  
 }
 
 
