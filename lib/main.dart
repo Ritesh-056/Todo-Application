@@ -42,8 +42,8 @@ class LoginDesign extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        accentColor: colorsName,
         primaryColor: colorsName,
+        accentColor: colorsName,
         fontFamily: 'Monotype Coursiva', //3, //3
       ),
       home: new SafeArea(

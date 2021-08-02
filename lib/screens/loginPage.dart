@@ -28,6 +28,10 @@ class _LoginPageState extends State<LoginPage> {
   String loginEmail = "";
   String loginPassword = "";
 
+  bool securePass = true;
+  var count =0;
+  Icon icon = Icon(Icons.visibility_off_outlined);
+
 
   Widget _divider() {
     return Container(
@@ -243,9 +247,11 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.email_outlined),
                           border: InputBorder.none,
                           fillColor: Color(0xfff5f5f6),
                           filled: true),
+
                     ),
                     SizedBox(height: 20),
                     Text(
@@ -257,7 +263,27 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 10,),
                     TextField(
                       controller: _passwordController,
+                      obscureText: securePass,
                       decoration: InputDecoration(
+                          prefixIcon:Icon(Icons.lock_outlined),
+                          suffixIcon: IconButton(
+                             icon: icon,
+                             onPressed: (){
+                               setState(() {
+
+                                 count++;
+
+                                 if(count % 2 != 0){
+                                    securePass = false;
+                                    icon = Icon(Icons.visibility_outlined);
+                                  }else{
+                                    securePass = true;
+                                    icon = Icon(Icons.visibility_off_outlined);
+                                  }
+
+                               });
+                             },
+                          ),
                           border: InputBorder.none,
                           fillColor: Color(0xfff5f5f6),
                           filled: true),

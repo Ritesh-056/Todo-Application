@@ -97,31 +97,6 @@ class _TodoHomeState extends State<TodoHome> {
   Future<void> SelectedItem(BuildContext context, item) async {
     switch (item) {
       case 0:
-        // setState(() {
-        //   if(counter % 2 ==0){
-        //     colorsName = Color.fromRGBO(187, 0, 27, 0.9);
-        //     print("Red is called=> $counter");
-        //   }else{
-        //     colorsName = Color.fromRGBO(27, 187, 0, 0.9);
-        //     print("Green is called=> $counter");
-        //   }
-        //     counter++;
-        // });
-
-        // return new Container(
-        //   child:Column(
-        //      children: [
-        //        ElevatedButton(
-        //          child: Text('Pick'),
-        //          onPressed: (){
-        //             pickColor(context);
-        //          },
-        //            )
-        //      ],
-        //   )
-        // );
-
-        // pickColor(context);
         colorPickerAlertDialog(context);
         break;
 
@@ -148,13 +123,15 @@ class _TodoHomeState extends State<TodoHome> {
   showAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("Cancel",
+          style:TextStyle(color: colorsName)),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Exit"),
+      child: Text("Exit",
+          style:TextStyle(color: colorsName)),
       onPressed: () {
         exit(0);
       },
@@ -168,8 +145,9 @@ class _TodoHomeState extends State<TodoHome> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
+
       content: Text(
-        "Are you sure want to exit ?",
+        "Are you sure want to exit ? App will close instantly.",
         style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
       ),
       actions: [
@@ -306,13 +284,6 @@ class _TodoHomeState extends State<TodoHome> {
   }
 
   colorPickerAlertDialog(BuildContext context) {
-    // // set up the buttons
-    // Widget cancelButton = TextButton(
-    //   child: Text("SELECT"),
-    //   onPressed:  () {
-    //     Navigator.pop(context);
-    //   },
-    // );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
@@ -328,6 +299,7 @@ class _TodoHomeState extends State<TodoHome> {
           ColorPicker(
             // showLabel: false,
             pickerColor: Colors.red,
+            showLabel: false,
             labelTextStyle:
                 TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
             pickerAreaHeightPercent: 0.5,

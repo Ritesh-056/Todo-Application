@@ -28,6 +28,11 @@ class _SignUpPageState extends State<SignUpPage> {
   String registerPassword ="";
   String registerUsername ="";
 
+  bool securePass = true;
+  var count =0;
+  Icon icon = Icon(Icons.visibility_off_outlined);
+
+
 
   Widget toast(text){
     Fluttertoast.showToast(
@@ -114,9 +119,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
       if(tracker == "e"){
         return new TextField(
+
             keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             decoration: InputDecoration(
+                prefixIcon: Icon(Icons.email_outlined),
                 border: InputBorder.none,
                 fillColor: Color(0xfff5f5f6),
                 filled: true)
@@ -124,9 +131,28 @@ class _SignUpPageState extends State<SignUpPage> {
 
       }else if( tracker  == "p"){
         return new TextField(
-            obscureText: true,
+            obscureText: securePass,
             controller: _passwordController,
             decoration: InputDecoration(
+                prefixIcon: Icon(Icons.lock_outlined),
+                suffixIcon: IconButton(
+                  icon: icon,
+                  onPressed: (){
+                    setState(() {
+
+                      count++;
+
+                      if(count % 2 != 0){
+                        securePass = false;
+                        icon = Icon(Icons.visibility_outlined);
+                      }else{
+                        securePass = true;
+                        icon = Icon(Icons.visibility_off_outlined);
+                      }
+
+                    });
+                  },
+                ),
                 border: InputBorder.none,
                 fillColor: Color(0xfff5f5f6),
                 filled: true)
@@ -135,6 +161,9 @@ class _SignUpPageState extends State<SignUpPage> {
           return new TextField(
           controller: _userNameController,
           decoration: InputDecoration(
+          prefixIcon: Icon(
+          Icons.account_circle_outlined,
+          ),
           border: InputBorder.none,
           fillColor: Color(0xfff5f5f6),
           filled: true));
