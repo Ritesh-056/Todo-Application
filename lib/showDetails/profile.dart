@@ -8,6 +8,7 @@ import '../main.dart';
 class ProfileDetails extends StatelessWidget{
 FirebaseAuth _auth = FirebaseAuth.instance;
 
+
  Widget _text( title, size,color,weight) {
     return Text(
       title,

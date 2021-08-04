@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 import 'package:android_alarm_manager/android_alarm_manager.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,6 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app/showDetails/insert_task.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'profile.dart';
@@ -36,6 +39,17 @@ class _TodoHomeState extends State<TodoHome> {
   User user = FirebaseAuth.instance.currentUser;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   var documentRef = FirebaseFirestore.instance.collection('todos');
+
+
+  Widget toast(text){
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 5,
+        fontSize: 16.0
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,13 +181,13 @@ class _TodoHomeState extends State<TodoHome> {
 
   Future<LoginPage> _signOutFirebase() async {
     await FirebaseAuth.instance.signOut();
-    Navigator.push(
+    return Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   Future<LoginPage> _signOutGoogle() async {
     await _googleSignIn.signOut();
-    Navigator.push(
+    return Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
@@ -188,7 +202,7 @@ class _TodoHomeState extends State<TodoHome> {
                 final List<DocumentSnapshot> documents = snapShot.data.docs;
 
                 if (documents.isNotEmpty) {
-                  return ListView(
+                 return ListView(
                       children: documents
                           .map((doc) => Card(
                                 shape: RoundedRectangleBorder(
@@ -222,6 +236,7 @@ class _TodoHomeState extends State<TodoHome> {
                                               .doc(doc.id)
                                               .delete();
                                         });
+                                        toast('Deleted Successfully');
                                       },
                                       icon: Icon(
                                         Icons.delete,
@@ -236,12 +251,13 @@ class _TodoHomeState extends State<TodoHome> {
                     child: Container(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Column(
+                        child:  Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.hourglass_empty_outlined,
                               color: colorsName,
-                              size: 100,
+                              size: 50,
                             ),
                             Text('Empty data..!'),
                           ],
@@ -251,7 +267,7 @@ class _TodoHomeState extends State<TodoHome> {
                   );
                 }
               } else if (snapShot.hasError) {
-                return Center(child: Container(child: Text("It's Error!")));
+                return Center(child: Container(child: Text("It's Error! Something went wrong")));
               }
 
               return Center(
@@ -259,6 +275,7 @@ class _TodoHomeState extends State<TodoHome> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -334,36 +351,5 @@ class _TodoHomeState extends State<TodoHome> {
     );
   }
 
-  // void pickColor(BuildContext context) {
-  //     showDialog(
-  //         context: context,
-  //         builder: (context)=>AlertDialog(
-  //           title:Center(
-  //             child: Text('Pick Your Color',
-  //             style: TextStyle(fontSize: 15),
-  //             ),
-  //           ),
-  //           content:
-  //               Container(
-  //                 child: Column(
-  //                   children: [
-  //                     buildColorPicker(),
-  //                     SizedBox(height: 20,),
-  //                     TextButton(
-  //                       child:Text('SELECT',
-  //                         style:TextStyle(fontSize: 13),
-  //                       ),
-  //                       onPressed: (){
-  //                         Navigator.of(context).pop();
-  //                       },
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //
-  //
-  //           ));
-  //
-  // }
 
 }

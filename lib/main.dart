@@ -20,9 +20,8 @@ import 'screens/loginPage.dart';
 
 const text_color_white = Colors.white;
 const padding_number = 8.0;
-
 Color colorsName = Colors.green[500];
-
+var auth = FirebaseAuth.instance;
 
 // this is main methods for
 Future<void> main() async {
@@ -33,7 +32,7 @@ Future<void> main() async {
 }
 
 class LoginDesign extends StatelessWidget {
-  var auth = FirebaseAuth.instance;
+
 
   @override
   Widget build(BuildContext context) {

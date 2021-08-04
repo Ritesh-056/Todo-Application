@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/bezierContainer.dart';
@@ -113,7 +116,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _entryField(String title,String tracker, {bool isPassword = false}) {
+  Widget _entryField(String title,String tracker) {
 
     Widget _checkField(){
 
@@ -192,37 +195,43 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
 
-  Widget _submitButton() {
-    return GestureDetector(
+  Widget _submitButton() => GestureDetector(
       onTap: () async {
 
-            try{
-              if(_emailController.text.length > 0 &&
-                  _passwordController.text.length >0  &&
-                  _userNameController.text.length > 0){
 
-                     await  auth.createUserWithEmailAndPassword(
-                    email: _emailController.text,
-                    password: _passwordController.text);
+          try{
+            if(_emailController.text.length > 0 &&
+                _passwordController.text.length >0  &&
+                _userNameController.text.length > 0){
 
-                toast('SignUp Successful...!');
-                Navigator.push(
-                    context,MaterialPageRoute(builder: (context)=>LoginPage()));
+              await  auth.createUserWithEmailAndPassword(
+                  email: _emailController.text,
+                  password: _passwordController.text);
+
+              toast('SignUp Successful...!');
+              Navigator.push(
+                  context,MaterialPageRoute(builder: (context)=>LoginPage()));
 
 
-              }else{
-                _modelBox("Make sure you have inserted your email, password and username.");
-              }
-            } on FirebaseAuthException catch (e){
-              _modelBox('${e.message}');
-              print("========Error[firebaseAuth]========");
-              print(e.message);
-            } catch(ex){
-               _modelBox('${ex.toString()}');
-               print("========Error[Catch]========");
-               print(ex.message);
-
+            }else{
+              _modelBox("Make sure you have inserted your email, password and username.");
             }
+          } on FirebaseAuthException catch (e){
+
+            String text = 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
+            if(e.message == text){
+              print('No internet available');
+              return _modelBox('No Internet Available');
+            }
+            _modelBox('${e.message}');
+            print("========Error[firebaseAuth]========");
+            print(e.message);
+          } catch(ex){
+            _modelBox('${ex.toString()}');
+            print("========Error[Catch]========");
+            print(ex.message);
+
+          }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -247,7 +256,6 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
-  }
 
 
 
@@ -309,8 +317,8 @@ class _SignUpPageState extends State<SignUpPage> {
     return Column(
       children: <Widget>[
         _entryField("Username","u"),
-        _entryField("Email id","e"),
-        _entryField("Password","p", isPassword: true),
+        _entryField("Email ","e"),
+        _entryField("Password","p"),
       ],
     );
   }
@@ -330,7 +338,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 right: -MediaQuery.of(context).size.width * .4,
                 child: BezierContainer(),
               ),
-              Container(
+               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: SingleChildScrollView(
                   child: Column(
@@ -354,6 +362,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
               ),
+
               Positioned(top: 0, left: 0, child: _backButton()),
             ],
           ),
@@ -361,5 +370,7 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
+
+
 }
 

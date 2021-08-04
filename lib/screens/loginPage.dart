@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/components/addition.dart';
 import 'package:flutter_app/components/bezierContainer.dart';
 import 'package:flutter_app/components/check_connectivity.dart';
@@ -31,7 +35,6 @@ class _LoginPageState extends State<LoginPage> {
   bool securePass = true;
   var count =0;
   Icon icon = Icon(Icons.visibility_off_outlined);
-
 
   Widget _divider() {
     return Container(
@@ -133,10 +136,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget _GoogleButton() {
     return GestureDetector(
       onTap: () {
+        // if(isConnecting == false){
+        //    return _modelBox('No Internet Available');
+        // }
+
         setState(() {
           isLoading = true;
         });
         signInWithGoogle();
+
       },
       child: Container(
         height: 50,
@@ -293,43 +301,54 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     InkWell(
                       onTap: () async {
-                        try{
 
-                          if(_emailController.text.length ==0 &&
-                             _passwordController.text.length ==0){
-                            
-                             _modelBox('Make sure you have inserted email and password.');
-                            
-                          }else{
-                           await auth.signInWithEmailAndPassword(
-                                email: _emailController.text,
-                                password: _passwordController.text);
+                        // if( isConnecting == false){
+                        //   return _modelBox('No Internet Available');
+                        // }
 
-                            if(auth.currentUser.uid !=null){
+                          try{
+                            if(_emailController.text.length ==0 &&
+                                _passwordController.text.length ==0){
+
+                              _modelBox('Make sure you have inserted email and password.');
+
+                            }else{
+                              await auth.signInWithEmailAndPassword(
+                                  email: _emailController.text,
+                                  password: _passwordController.text);
+
+                              if(auth.currentUser.uid !=null){
                                 Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                builder: (context) =>
-                                TodoHome(email: auth.currentUser.email, password: null)));
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TodoHome(email: auth.currentUser.email, password: null)));
                                 _emailController.clear();
                                 _passwordController.clear();
 
-                               } else {
-                                  _modelBox('No account signed in.');
-                                }
+                              } else {
+                                _modelBox('No account signed in.');
+                              }
 
                             }
                           } on FirebaseAuthException catch(ex){
                             print("==========Error[FirebaseAuth]=============");
+                            String text = 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
+
+                            if(ex.message == text){
+                              print('No internet available');
+                              return _modelBox('No Internet Available');
+                            }
+
                             print('${ex.message}');
                             _modelBox('${ex.message}');
 
-                        } catch(e){
-                          print("==========Error[catch]=============");
-                          print('${e.toString()}');
-                          _modelBox('${e.toString()}');
+                          } catch(e){
+                            print("==========Error[catch]=============");
+                            print('${e.toString()}');
+                            _modelBox('${e.toString()}');
 
-                        }
+                          }
                         },
                       child: Container(
                         height: 50,
@@ -371,10 +390,11 @@ class _LoginPageState extends State<LoginPage> {
                     InkWell(
                       onTap: () {
                         print('tapped');
-                        Navigator.push(
+                    Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SignUpPage()));
+
                       },
                       child: Container(
                         margin: EdgeInsets.symmetric(vertical: 20),
@@ -416,27 +436,53 @@ class _LoginPageState extends State<LoginPage> {
 
 
   //function to login user from google
-  Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+  signInWithGoogle() async {
 
-    var checkAuth = await auth.signInWithCredential(credential);
-    if (checkAuth.user.uid != null) {
+
+    try{
+      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await auth.signInWithCredential(credential);
+
+      if (auth.currentUser.uid != null) {
+        setState(() {
+          isLoading = false;
+        });
+        return Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    TodoHome(email: auth.currentUser.email, password: null)));
+      }
+    } on FirebaseAuthException catch(ex){
       setState(() {
         isLoading = false;
       });
-      return Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  TodoHome(email: checkAuth.user.email, password: null)));
-    } else {
-      print("No account signed in");
+      print("==========Error[FirebaseAuth]=============");
+
+      print('${ex.message}');
+      _modelBox('${ex.message}');
+
     }
+      catch(e){
+      setState(() {
+        isLoading = false;
+      });
+      print("==========Error[catch]=============");
+      String errorResult = 'PlatformException(network_error, com.google.android.gms.common.api.ApiException: 7: , null, null)';
+      if( e.toString() == errorResult){
+        print('No internet Available');
+        return _modelBox('No Internet Available');
+      }
+      print('${e.toString()}');
+      _modelBox('${e.toString()}');
+
+      }
   }
 }

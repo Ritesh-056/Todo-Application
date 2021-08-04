@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/loginPage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../main.dart';
 
@@ -16,6 +20,16 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   var _emailController = new TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
+
+  Widget toast(text){
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 5,
+        fontSize: 16.0
+    );
+  }
 
 
   Widget _modelBox(text){
@@ -171,22 +185,27 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                             SizedBox(height: 20,),
                             new GestureDetector(
                               onTap: () async {
-                                   //your code
 
 
                                      try{
-                                        if(_emailController.text.isEmpty){
+                                       if(_emailController.text.isEmpty){
                                          return _modelBox(
-                                            'Please,make sure you have inserted email.');
-                                        }else{
-                                           await auth.sendPasswordResetEmail(
-                                           email:_emailController.text );
+                                             'Please,make sure you have inserted email.');
+                                       }else{
+                                         await auth.sendPasswordResetEmail(
+                                             email:_emailController.text );
 
-                                           showAlertDialog(context);
-                                           Navigator.pop(context);
-                                        }
+                                         showAlertDialog(context);
+                                         Navigator.pop(context);
+                                       }
                                      } on FirebaseAuthException catch(ex){
                                        print("==========Error[FirebaseAuth]=============");
+
+                                       String errorResult = 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
+                                       if( ex.message == errorResult){
+                                         print('No internet Available');
+                                         return _modelBox('No Internet Available');
+                                       }
                                        print('${ex.message}');
                                        _modelBox('${ex.message}');
 
@@ -196,7 +215,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                        _modelBox('${e.toString()}');
 
                                      }
-
                                 },
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16.0),

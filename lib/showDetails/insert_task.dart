@@ -3,6 +3,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/showDetails/showTask.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../main.dart';
 
 class AddTaskHome extends StatefulWidget {
@@ -18,6 +19,16 @@ class _AddTaskHomeState extends State<AddTaskHome> {
   FirebaseAuth auth = FirebaseAuth.instance;
   User user = FirebaseAuth.instance.currentUser;
   var documentRef = FirebaseFirestore.instance.collection('todos');
+
+  Widget toast(text){
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 5,
+        fontSize: 16.0
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,6 +175,7 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => TodoHome()));
+                            toast('Added Successfully');
                           } else {
                             showModalBottomSheet(
                                 context: context,
