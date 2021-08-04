@@ -9,7 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_app/screens/loginPage.dart';
 import 'package:flutter_app/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_app/showDetails/insert_task.dart';
+import 'package:flutter_app/screens/insert_task.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';

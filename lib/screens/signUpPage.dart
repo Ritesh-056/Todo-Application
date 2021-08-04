@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/components/bezierContainer.dart';
+import 'package:flutter_app/components/customContainer.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/screens/loginPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -210,7 +210,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
               toast('SignUp Successful...!');
               Navigator.push(
-                  context,MaterialPageRoute(builder: (context)=>LoginPage()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context)=>LoginPage()));
 
 
             }else{
@@ -252,7 +254,10 @@ class _SignUpPageState extends State<SignUpPage> {
                 colors: [ colorsName, colorsName])),
         child: Text(
           'Sign Up',
-          style: TextStyle(fontSize: 15, color: Colors.white,fontWeight: FontWeight.w600),
+          style: TextStyle(
+              fontSize: 15,
+              color: Colors.white,
+              fontWeight: FontWeight.w600),
         ),
       ),
     );

@@ -4,7 +4,6 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter_app/components/check_connectivity.dart';
 import 'package:flutter_app/screens/signUpPage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -53,7 +52,6 @@ class LoginDesign extends StatelessWidget {
             splashTransition: SplashTransition.slideTransition,
             backgroundColor: text_color_white,
             splashIconSize: 100,
-            // nextScreen: CheckConnectivity(),
             nextScreen: auth.currentUser?.uid == null
                 ? LoginPage()
                 : TodoHome(
