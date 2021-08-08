@@ -190,7 +190,7 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                                             Icons.error,
                                             size: 50,
                                             color:
-                                                Color.fromRGBO(180, 0, 20, 0.9),
+                                            colorsName,
                                           ),
                                           title: new Text('Oops...!',
                                               style: TextStyle(

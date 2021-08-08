@@ -60,7 +60,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   leading: new Icon(
                     Icons.error,
                     size: 50,
-                    color: Color.fromRGBO(180, 0, 20, 0.9),),
+                    color: colorsName),
                   title: new Text(
                       'Oops...!',
                       style: TextStyle(

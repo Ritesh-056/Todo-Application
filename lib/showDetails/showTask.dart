@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
-import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_app/screens/loginPage.dart';
 import 'package:flutter_app/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app/screens/insert_task.dart';
+import 'package:flutter_app/screens/updateTask.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -30,6 +30,9 @@ class TodoHome extends StatefulWidget {
 }
 
 class _TodoHomeState extends State<TodoHome> {
+
+
+  var title,date;
   var counter = 0;
   int helloAlarmID = 1;
   var itemValue;
@@ -181,12 +184,14 @@ class _TodoHomeState extends State<TodoHome> {
 
   Future<LoginPage> _signOutFirebase() async {
     await FirebaseAuth.instance.signOut();
+    toast('Log out Successful');
     return Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   Future<LoginPage> _signOutGoogle() async {
     await _googleSignIn.signOut();
+    toast('Log out Successful');
     return Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
@@ -217,7 +222,7 @@ class _TodoHomeState extends State<TodoHome> {
                                     size: 30,
                                   ),
                                   title: Text(
-                                    doc['title'],
+                                     doc['title'],
                                     style: TextStyle(fontSize: 15),
                                   ),
                                   subtitle: Text(
@@ -242,7 +247,14 @@ class _TodoHomeState extends State<TodoHome> {
                                         Icons.delete,
                                         color: colorsName,
                                         size: 30,
-                                      )),
+                                      ),
+                                  ),
+                                  //goto task screen.
+                                  onTap: (){
+                                    Navigator.push(
+                                      context, MaterialPageRoute(
+                                        builder: (context)=>UpdateTodoData(title :doc['title'],date:doc['date'], docsId:doc.id)));
+                                  },
                                 ),
                               ))
                           .toList());
@@ -315,7 +327,7 @@ class _TodoHomeState extends State<TodoHome> {
         children: [
           ColorPicker(
             // showLabel: false,
-            pickerColor: Colors.red,
+            pickerColor: colorsName,
             showLabel: false,
             labelTextStyle:
                 TextStyle(fontSize: 12, fontWeight: FontWeight.w500),

@@ -9,7 +9,6 @@ import 'package:flutter_app/screens/forget_password.dart';
 import 'package:flutter_app/screens/signUpPage.dart';
 import 'package:flutter_app/showDetails/showTask.dart';
 import 'package:flutter_app/main.dart';
-import '../components/alertDialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -104,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                   leading: new Icon(
                     Icons.error,
                     size: 50,
-                    color: Color.fromRGBO(180, 0, 20, 0.9),),
+                    color: colorsName),
                   title: new Text(
                       'Oops...!',
                       style: TextStyle(
@@ -134,10 +133,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget _GoogleButton() {
     return GestureDetector(
       onTap: () {
-        // if(isConnecting == false){
-        //    return _modelBox('No Internet Available');
-        // }
-
         setState(() {
           isLoading = true;
         });

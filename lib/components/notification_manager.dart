@@ -6,18 +6,19 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class NotificationManager extends StatefulWidget {
 
 
-    String title ;
+    String title="Main Notifier" ;
     String taskTime;
-    NotificationManager({
-          @required this.title,
-          @required this.taskTime });
+    // NotificationManager({
+    //       @required this.title,
+    //       @required this.taskTime });
+    // title: title ,
+    // taskTime: taskTime
 
 
   @override
   _NotificationManagerState createState()
          => _NotificationManagerState(
-             title: title ,
-             taskTime: taskTime
+
          );
 }
 
@@ -50,12 +51,16 @@ class _NotificationManagerState extends State<NotificationManager> {
         initilizationsSettings,
         onSelectNotification: notificationSelected);
 
-    _timer = new Timer(
-        const Duration(
-            milliseconds: 100),
-            (){
-               _showNotification();
-               });
+
+    _showNotification();
+
+
+    // _timer = new Timer(
+    //     const Duration(
+    //         milliseconds: 100),
+    //         (){
+    //
+    //            });
 
   }
 
@@ -103,19 +108,19 @@ class _NotificationManagerState extends State<NotificationManager> {
     );
 
 
-    var scheduledTime = DateTime.now()
-        .add(
-        Duration(
-            minutes : 1 )
-    );
+    // var scheduledTime = DateTime.now()
+    //     .add(
+    //     Duration(
+    //         minutes : 1 )
+    // );
 
-    flutterNotification
-        .schedule(
-        1,
-        "Task Tracker Alert",
-        '$title',
-        scheduledTime,
-        generalNotificationDetails );
+  //   flutterNotification
+  //       .schedule(
+  //       1,
+  //       "Task Tracker Alert",
+  //       '$title',
+  //       scheduledTime,
+  //       generalNotificationDetails );
   }
 
 
