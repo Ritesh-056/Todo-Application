@@ -122,13 +122,15 @@ class LoginDesign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: colorsName,
-        accentColor: colorsName,
-        fontFamily: 'Monotype Coursiva', //3, //3
+          iconTheme: new IconThemeData(
+          color: Colors.black87,
+         ),
+        fontFamily: 'Monotype Coursiva',
+        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: colorsName), //3, //3
       ),
       home: new SafeArea(
         child: Scaffold(

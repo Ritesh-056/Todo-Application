@@ -5,6 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_app/screens/chat.dart';
 import 'package:flutter_app/screens/loginPage.dart';
 import 'package:flutter_app/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -80,6 +81,13 @@ class _TodoHomeState extends State<TodoHome> {
                 ),
               ),
               PopupMenuItem<int>(
+                value: 4,
+                child: Text(
+                  "Message",
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
+              ),
+              PopupMenuItem<int>(
                 value: 1,
                 child: Text(
                   "Sign out",
@@ -134,6 +142,14 @@ class _TodoHomeState extends State<TodoHome> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => ProfileDetails()));
         break;
+
+
+      case 4 :
+          toast('Oops..! No message feature is available right now.');
+        // Navigator.push(
+        //   context, MaterialPageRoute(builder: (context) => ChatMessage()));
+      break;
+
     }
   }
 
