@@ -81,13 +81,6 @@ class _TodoHomeState extends State<TodoHome> {
                 ),
               ),
               PopupMenuItem<int>(
-                value: 4,
-                child: Text(
-                  "Message",
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
-              ),
-              PopupMenuItem<int>(
                 value: 1,
                 child: Text(
                   "Sign out",
@@ -115,9 +108,21 @@ class _TodoHomeState extends State<TodoHome> {
               context, MaterialPageRoute(builder: (context) => AddTaskHome()));
         },
       ),
-      body: check_userNull(context),
+      body: checkUserNull(context),
     ));
   }
+
+
+
+  void funcSignOut(){
+
+    //sign out functions
+    _signOutFirebase();
+    _signOutGoogle();
+
+    toast('Log out Successful');
+  }
+
 
   Future<void> SelectedItem(BuildContext context, item) async {
     switch (item) {
@@ -127,15 +132,15 @@ class _TodoHomeState extends State<TodoHome> {
 
       case 1:
         if (auth.currentUser?.uid != null) {
-          _signOutFirebase();
-          _signOutGoogle();
+          showAlertDialog(context,"Are you sure want to logout?","Log out","Log out",funcSignOut);
+
         } else {
           print("No user found...!");
         }
         break;
 
       case 2:
-        showAlertDialog(context);
+        showAlertDialog(context,"Are you sure want to exit ? App will close instantly.","Exit","Exit App", exit(0));
         break;
 
       case 3:
@@ -153,7 +158,7 @@ class _TodoHomeState extends State<TodoHome> {
     }
   }
 
-  showAlertDialog(BuildContext context) {
+  showAlertDialog(BuildContext context , alertTitle, doneButton, alertMainTitle, callBackMethod) {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: Text("Cancel",
@@ -163,24 +168,22 @@ class _TodoHomeState extends State<TodoHome> {
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Exit",
+      child: Text(doneButton,
           style:TextStyle(color: colorsName)),
-      onPressed: () {
-        exit(0);
-      },
+      onPressed: callBackMethod,
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Center(
         child: Text(
-          "Exit App",
+          alertMainTitle,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
 
       content: Text(
-        "Are you sure want to exit ? App will close instantly.",
+        alertTitle,
         style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
       ),
       actions: [
@@ -200,19 +203,19 @@ class _TodoHomeState extends State<TodoHome> {
 
   Future<LoginPage> _signOutFirebase() async {
     await FirebaseAuth.instance.signOut();
-    toast('Log out Successful');
     return Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   Future<LoginPage> _signOutGoogle() async {
     await _googleSignIn.signOut();
-    toast('Log out Successful');
     return Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
-  check_userNull(BuildContext context) {
+
+
+  checkUserNull(BuildContext context) {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       return new Container(
         child: new StreamBuilder(
