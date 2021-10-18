@@ -33,10 +33,13 @@ class TodoHome extends StatefulWidget {
 class _TodoHomeState extends State<TodoHome> {
 
 
-  var title,date;
+  BuildContext mContext;
+
+  var title, date;
   var counter = 0;
   int helloAlarmID = 1;
   var itemValue;
+  var docId ;
   final TextEditingController eCtrl = new TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -45,7 +48,8 @@ class _TodoHomeState extends State<TodoHome> {
   var documentRef = FirebaseFirestore.instance.collection('todos');
 
 
-  Widget toast(text){
+  Widget toast(text) {
+
     Fluttertoast.showToast(
         msg: text,
         toastLength: Toast.LENGTH_SHORT,
@@ -53,69 +57,60 @@ class _TodoHomeState extends State<TodoHome> {
         timeInSecForIosWeb: 5,
         fontSize: 16.0
     );
+
   }
+
+
+
+  PopupMenuEntry  itemMenuList(itemValue, itemTitle){
+   return PopupMenuItem<int>(
+      value: itemValue,
+      child: Text(
+        itemTitle,
+        style: TextStyle(
+            fontSize: 13, fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-        backgroundColor: colorsName,
-        title: Text('Task',
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),
-        actions: [
-          PopupMenuButton(
-            itemBuilder: (context) => [
-              PopupMenuItem<int>(
-                value: 0,
-                child: Text(
-                  "Theme",
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
-              ),
-              PopupMenuItem<int>(
-                value: 3,
-                child: Text(
-                  "Profile",
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
-              ),
-              PopupMenuItem<int>(
-                value: 1,
-                child: Text(
-                  "Sign out",
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
-              ),
-              PopupMenuItem<int>(
-                value: 2,
-                child: Text(
-                  "Exit",
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
+          appBar: AppBar(
+            backgroundColor: colorsName,
+            title: Text('Task',
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),
+            actions: [
+              PopupMenuButton(
+                itemBuilder: (context) =>
+                [
+                 itemMenuList(0,"Theme"),
+                 itemMenuList(1,"Profile"),
+                 itemMenuList(2,"Sign out"),
+                 itemMenuList(3,"Exit")
+                ],
+                onSelected: (item) => SelectedItem(context, item),
               ),
             ],
-            onSelected: (item) => SelectedItem(context, item),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        tooltip: 'Add task',
-        backgroundColor: colorsName,
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddTaskHome()));
-        },
-      ),
-      body: checkUserNull(context),
-    ));
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            tooltip: 'Add task',
+            backgroundColor: colorsName,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddTaskHome()));
+            },
+          ),
+          body: showTodoList(context),
+        ));
   }
 
 
-
-  void funcSignOut(){
-
+  void funcSignOut() {
     //sign out functions
     _signOutFirebase();
     _signOutGoogle();
@@ -131,45 +126,42 @@ class _TodoHomeState extends State<TodoHome> {
         break;
 
       case 1:
-        if (auth.currentUser?.uid != null) {
-          showAlertDialog(context,"Are you sure want to logout?","Log out","Log out",funcSignOut);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ProfileDetails()));
+        break;
 
+      case 2:
+        if (auth.currentUser?.uid != null) {
+          showAlertDialog(
+              context, "Are you sure want to logout?", "Log out", "Log out",
+              funcSignOut);
         } else {
           print("No user found...!");
         }
         break;
 
-      case 2:
-        showAlertDialog(context,"Are you sure want to exit ? App will close instantly.","Exit","Exit App", exit(0));
-        break;
-
       case 3:
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ProfileDetails()));
+        showAlertDialog(
+            context, "Are you sure want to exit ? App will close instantly.",
+            "Exit", "Exit App", funcExit);
         break;
-
-
-      case 4 :
-          toast('Oops..! No message feature is available right now.');
-        // Navigator.push(
-        //   context, MaterialPageRoute(builder: (context) => ChatMessage()));
-      break;
-
     }
   }
 
-  showAlertDialog(BuildContext context , alertTitle, doneButton, alertMainTitle, callBackMethod) {
+
+  showAlertDialog(BuildContext context, alertTitle, doneButton, alertMainTitle,
+       callBackMethod) {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: Text("Cancel",
-          style:TextStyle(color: colorsName)),
+          style: TextStyle(color: colorsName)),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
       child: Text(doneButton,
-          style:TextStyle(color: colorsName)),
+          style: TextStyle(color: colorsName)),
       onPressed: callBackMethod,
     );
 
@@ -201,11 +193,17 @@ class _TodoHomeState extends State<TodoHome> {
     );
   }
 
+
+
+
   Future<LoginPage> _signOutFirebase() async {
     await FirebaseAuth.instance.signOut();
     return Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
+
+
+
 
   Future<LoginPage> _signOutGoogle() async {
     await _googleSignIn.signOut();
@@ -214,91 +212,85 @@ class _TodoHomeState extends State<TodoHome> {
   }
 
 
+   void funcExit(){
+    exit(0);
+  }
 
-  checkUserNull(BuildContext context) {
+
+  showTodoList(BuildContext context) {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       return new Container(
         child: new StreamBuilder(
             stream:
-                documentRef.doc(user.uid).collection('user_todo').snapshots(),
+            documentRef.doc(user.uid).collection('user_todo').snapshots(),
             builder: (context, snapShot) {
+
+              mContext = context ;
+
               if (snapShot.hasData) {
                 final List<DocumentSnapshot> documents = snapShot.data.docs;
 
                 if (documents.isNotEmpty) {
-                 return ListView(
+                  return ListView(
                       children: documents
-                          .map((doc) => Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
+                          .map((doc) =>
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            shadowColor: Colors.black45,
+                            elevation: 10,
+                            child: ListTile(
+                              leading: Icon(
+                                Icons.event,
+                                color: Colors.black54,
+                                size: 30,
+                              ),
+                              title: Text(
+                                doc['title'],
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              subtitle: Text(
+                                doc['date'],
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              // trailing: Icon(Icons.delete,color: colorsName,size: 30, ),
+                              trailing: IconButton(
+                                tooltip: 'Delete',
+                                onPressed: (){
+
+                                  docId = doc.id ;
+                                  showAlertDialog(context,
+                                      "Are you sure want to delete ?",
+                                      "Confirm",
+                                      "Delete Task",
+                                      funcTaskDelete);
+
+                                },
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: colorsName,
+                                  size: 30,
                                 ),
-                                shadowColor: Colors.black45,
-                                elevation: 10,
-                                child: ListTile(
-                                  leading: Icon(
-                                    Icons.event,
-                                    color: Colors.black54,
-                                    size: 30,
-                                  ),
-                                  title: Text(
-                                     doc['title'],
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                  subtitle: Text(
-                                    doc['date'],
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  // trailing: Icon(Icons.delete,color: colorsName,size: 30, ),
-                                  trailing: IconButton(
-                                      tooltip: 'Delete',
-                                      onPressed: () {
-                                        setState(() {
-                                          //something is going to happen here..
-                                          documentRef
-                                              .doc(user.uid)
-                                              .collection('user_todo')
-                                              .doc(doc.id)
-                                              .delete();
-                                        });
-                                        toast('Deleted Successfully');
-                                      },
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: colorsName,
-                                        size: 30,
-                                      ),
-                                  ),
-                                  //goto task screen.
-                                  onTap: (){
-                                    Navigator.push(
-                                      context, MaterialPageRoute(
-                                        builder: (context)=>UpdateTodoData(title :doc['title'],date:doc['date'], docsId:doc.id)));
-                                  },
-                                ),
-                              ))
+                              ),
+                              //goto task screen.
+                              onTap: () {
+                                Navigator.push(
+                                    context, MaterialPageRoute(
+                                    builder: (context) =>
+                                        UpdateTodoData(title: doc['title'],
+                                            date: doc['date'],
+                                            docsId: doc.id)));
+                              },
+                            ),
+                          ))
                           .toList());
                 } else {
-                  return Center(
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child:  Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.hourglass_empty_outlined,
-                              color: colorsName,
-                              size: 50,
-                            ),
-                            Text('Empty data..!'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
+                   funcShowEmptyData();
                 }
               } else if (snapShot.hasError) {
-                return Center(child: Container(child: Text("It's Error! Something went wrong")));
+                return Center(child: Container(
+                    child: Text("It's Error! Something went wrong")));
               }
 
               return Center(
@@ -326,13 +318,35 @@ class _TodoHomeState extends State<TodoHome> {
     } else {
       return new Center(
           child: Container(
-        child: Text('Sorry no user found.'),
-      ));
+            child: Text('Sorry no user found.'),
+          ));
     }
   }
 
-  colorPickerAlertDialog(BuildContext context) {
 
+   funcShowEmptyData(){
+    return Center(
+      child: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.hourglass_empty_outlined,
+                color: colorsName,
+                size: 50,
+              ),
+              Text('Empty data..!'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+
+  colorPickerAlertDialog(BuildContext context) {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Center(
@@ -349,7 +363,7 @@ class _TodoHomeState extends State<TodoHome> {
             pickerColor: colorsName,
             showLabel: false,
             labelTextStyle:
-                TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
             pickerAreaHeightPercent: 0.5,
             onColorChanged: (colors) {
               setState(() {
@@ -381,6 +395,19 @@ class _TodoHomeState extends State<TodoHome> {
       },
     );
   }
+
+
+ void funcTaskDelete() {
+    documentRef
+        .doc(user.uid)
+        .collection('user_todo')
+        .doc(docId)
+        .delete();
+    toast('Deleted Successfully');
+
+    Navigator.of(context).pop();
+  }
+
 
 
 }

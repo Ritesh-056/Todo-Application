@@ -140,11 +140,12 @@ class LoginDesign extends StatelessWidget {
             splashTransition: SplashTransition.slideTransition,
             backgroundColor: text_color_white,
             splashIconSize: 100,
-            nextScreen: auth.currentUser?.uid == null
-                ? LoginPage()
-                : TodoHome(
-                email: auth.currentUser.email,
-                password: null),
+            nextScreen: TodoHome(email: auth.currentUser.email,password: null,),
+            // nextScreen: auth.currentUser?.uid == null
+            //     ? LoginPage()
+            //     : TodoHome(
+            //     email: auth.currentUser.email,
+            //     password: null),
           ),
         ),
       ),
