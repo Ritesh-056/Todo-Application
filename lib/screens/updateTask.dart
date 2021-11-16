@@ -32,8 +32,6 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
 
    var updatedTitle="";
    var updatedDate ="";
-
-
    var countTitle=0,countDate=0;
 
 
@@ -51,6 +49,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
      });
    }
 
+
    Widget toast(text){
      Fluttertoast.showToast(
          msg: text,
@@ -60,6 +59,8 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
          fontSize: 16.0
      );
    }
+
+
 
 
   @override

@@ -5,7 +5,6 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_app/screens/chat.dart';
 import 'package:flutter_app/screens/loginPage.dart';
 import 'package:flutter_app/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +19,7 @@ import 'profile.dart';
 
 class TodoHome extends StatefulWidget {
   final String password, email;
+
   TodoHome({
     Key key,
     @required this.email,
@@ -39,7 +39,8 @@ class _TodoHomeState extends State<TodoHome> {
   var counter = 0;
   int helloAlarmID = 1;
   var itemValue;
-  var docId ;
+  var docId;
+
   final TextEditingController eCtrl = new TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -49,7 +50,6 @@ class _TodoHomeState extends State<TodoHome> {
 
 
   Widget toast(text) {
-
     Fluttertoast.showToast(
         msg: text,
         toastLength: Toast.LENGTH_SHORT,
@@ -57,13 +57,11 @@ class _TodoHomeState extends State<TodoHome> {
         timeInSecForIosWeb: 5,
         fontSize: 16.0
     );
-
   }
 
 
-
-  PopupMenuEntry  itemMenuList(itemValue, itemTitle){
-   return PopupMenuItem<int>(
+  PopupMenuEntry itemMenuList(itemValue, itemTitle) {
+    return PopupMenuItem<int>(
       value: itemValue,
       child: Text(
         itemTitle,
@@ -86,10 +84,10 @@ class _TodoHomeState extends State<TodoHome> {
               PopupMenuButton(
                 itemBuilder: (context) =>
                 [
-                 itemMenuList(0,"Theme"),
-                 itemMenuList(1,"Profile"),
-                 itemMenuList(2,"Sign out"),
-                 itemMenuList(3,"Exit")
+                  itemMenuList(0, "Theme"),
+                  itemMenuList(1, "Profile"),
+                  itemMenuList(2, "Sign out"),
+                  itemMenuList(3, "Exit")
                 ],
                 onSelected: (item) => SelectedItem(context, item),
               ),
@@ -150,7 +148,7 @@ class _TodoHomeState extends State<TodoHome> {
 
 
   showAlertDialog(BuildContext context, alertTitle, doneButton, alertMainTitle,
-       callBackMethod) {
+      callBackMethod) {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: Text("Cancel",
@@ -194,15 +192,11 @@ class _TodoHomeState extends State<TodoHome> {
   }
 
 
-
-
   Future<LoginPage> _signOutFirebase() async {
     await FirebaseAuth.instance.signOut();
     return Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
-
-
 
 
   Future<LoginPage> _signOutGoogle() async {
@@ -212,7 +206,7 @@ class _TodoHomeState extends State<TodoHome> {
   }
 
 
-   void funcExit(){
+  void funcExit() {
     exit(0);
   }
 
@@ -224,8 +218,7 @@ class _TodoHomeState extends State<TodoHome> {
             stream:
             documentRef.doc(user.uid).collection('user_todo').snapshots(),
             builder: (context, snapShot) {
-
-              mContext = context ;
+              mContext = context;
 
               if (snapShot.hasData) {
                 final List<DocumentSnapshot> documents = snapShot.data.docs;
@@ -257,15 +250,13 @@ class _TodoHomeState extends State<TodoHome> {
                               // trailing: Icon(Icons.delete,color: colorsName,size: 30, ),
                               trailing: IconButton(
                                 tooltip: 'Delete',
-                                onPressed: (){
-
-                                  docId = doc.id ;
+                                onPressed: () {
+                                  docId = doc.id;
                                   showAlertDialog(context,
                                       "Are you sure want to delete ?",
                                       "Confirm",
                                       "Delete Task",
                                       funcTaskDelete);
-
                                 },
                                 icon: Icon(
                                   Icons.delete,
@@ -285,34 +276,16 @@ class _TodoHomeState extends State<TodoHome> {
                             ),
                           ))
                           .toList());
+
+
                 } else {
-                   funcShowEmptyData();
+                  return funcShowEmptyData();
                 }
               } else if (snapShot.hasError) {
                 return Center(child: Container(
                     child: Text("It's Error! Something went wrong")));
               }
-
-              return Center(
-                child: Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: CircularProgressIndicator(
-                            strokeWidth: 4,
-                            color: colorsName,
-                          ),
-                        ),
-                        Text('Loading..!'),
-                      ],
-                    ),
-                  ),
-                ),
-              );
+              return funcShowLoadingProgress();
             }),
       );
     } else {
@@ -324,7 +297,32 @@ class _TodoHomeState extends State<TodoHome> {
   }
 
 
-   funcShowEmptyData(){
+
+
+  funcShowLoadingProgress()=> Center(
+      child: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: CircularProgressIndicator(
+                  strokeWidth: 4,
+                  color: colorsName,
+                ),
+              ),
+              Text('Loading..!'),
+            ],
+          ),
+        ),
+      ),
+    );
+
+
+
+  funcShowEmptyData() {
     return Center(
       child: Container(
         child: Padding(
@@ -397,7 +395,7 @@ class _TodoHomeState extends State<TodoHome> {
   }
 
 
- void funcTaskDelete() {
+  void funcTaskDelete() {
     documentRef
         .doc(user.uid)
         .collection('user_todo')
@@ -407,6 +405,7 @@ class _TodoHomeState extends State<TodoHome> {
 
     Navigator.of(context).pop();
   }
+
 
 
 

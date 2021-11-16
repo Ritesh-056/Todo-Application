@@ -20,20 +20,24 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
   Future<UserCredential> userCredential;
   bool isLoading = false;
-
   String loginEmail = "";
   String loginPassword = "";
-
   bool securePass = true;
   var count =0;
   Icon icon = Icon(Icons.visibility_off_outlined);
 
+
+
+
   Widget _divider() {
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 15),
       child: Row(
@@ -88,6 +92,8 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
+
+
   
   Widget _modelBox(text){
 
@@ -129,6 +135,8 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
   }
+
+
 
   Widget _GoogleButton() {
     return GestureDetector(
@@ -192,6 +200,8 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+
 
 
   @override

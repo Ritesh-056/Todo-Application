@@ -1,13 +1,22 @@
+// import 'dart:html';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 
 
 
-class ProfileDetails extends StatelessWidget{
-FirebaseAuth _auth = FirebaseAuth.instance;
+class ProfileDetails extends StatefulWidget{
 
+  @override
+  State<ProfileDetails> createState() => _ProfileDetailsState();
+}
+
+class _ProfileDetailsState extends State<ProfileDetails> {
+FirebaseAuth _auth = FirebaseAuth.instance;
 
  Widget _text( title, size,color,weight) {
     return Text(
@@ -20,11 +29,14 @@ FirebaseAuth _auth = FirebaseAuth.instance;
     );
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
 
+      return SafeArea(
+      child: Scaffold(
 
           floatingActionButton: FloatingActionButton(
             backgroundColor: colorsName,
@@ -33,7 +45,6 @@ FirebaseAuth _auth = FirebaseAuth.instance;
               Navigator.pop(context);
             },
           ),
-
 
 
           body:Center(
@@ -48,7 +59,10 @@ FirebaseAuth _auth = FirebaseAuth.instance;
                         width: 100,
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundImage:NetworkImage("${_auth?.currentUser?.photoURL}"),
+                          backgroundImage:NetworkImage(
+                              "${_auth?.currentUser?.photoURL}"
+
+                          ),
                         ),
                         decoration: new BoxDecoration(
                           shape: BoxShape.circle,

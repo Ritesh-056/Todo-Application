@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
 class ClipPainter extends CustomClipper<Path>{
+
   @override
 
   Path getClip(Size size) {
