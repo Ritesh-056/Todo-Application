@@ -15,7 +15,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'profile.dart';
 
 class TodoHome extends StatefulWidget {
   final String password, email;
@@ -85,9 +84,8 @@ class _TodoHomeState extends State<TodoHome> {
                 itemBuilder: (context) =>
                 [
                   itemMenuList(0, "Theme"),
-                  itemMenuList(1, "Profile"),
-                  itemMenuList(2, "Sign out"),
-                  itemMenuList(3, "Exit")
+                  itemMenuList(1, "Sign out"),
+                  itemMenuList(2, "Exit")
                 ],
                 onSelected: (item) => SelectedItem(context, item),
               ),
@@ -124,11 +122,6 @@ class _TodoHomeState extends State<TodoHome> {
         break;
 
       case 1:
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ProfileDetails()));
-        break;
-
-      case 2:
         if (auth.currentUser?.uid != null) {
           showAlertDialog(
               context, "Are you sure want to logout?", "Log out", "Log out",
@@ -138,7 +131,7 @@ class _TodoHomeState extends State<TodoHome> {
         }
         break;
 
-      case 3:
+      case 2:
         showAlertDialog(
             context, "Are you sure want to exit ? App will close instantly.",
             "Exit", "Exit App", funcExit);
