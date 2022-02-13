@@ -33,7 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   bool securePass = true;
   var count =0;
-  Icon icon = Icon(Icons.visibility_off_outlined);
+  Icon icon = Icon(Icons.visibility_off_outlined,color: colorsName,);
 
 
 
@@ -122,11 +122,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
       if(tracker == "e"){
         return new TextField(
-
+            cursorColor: colorsName,
             keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             decoration: InputDecoration(
-                prefixIcon: Icon(Icons.email_outlined),
+                prefixIcon: Icon(Icons.email_outlined,color: colorsName,),
                 border: InputBorder.none,
                 fillColor: Color(0xfff5f5f6),
                 filled: true)
@@ -134,10 +134,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
       }else if( tracker  == "p"){
         return new TextField(
+            cursorColor: colorsName,
             obscureText: securePass,
             controller: _passwordController,
             decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock_outlined),
+                prefixIcon: Icon(Icons.lock_outlined,color: colorsName,),
                 suffixIcon: IconButton(
                   icon: icon,
                   onPressed: (){
@@ -147,10 +148,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       if(count % 2 != 0){
                         securePass = false;
-                        icon = Icon(Icons.visibility_outlined);
+                        icon = Icon(Icons.visibility_outlined,color: colorsName,);
                       }else{
                         securePass = true;
-                        icon = Icon(Icons.visibility_off_outlined);
+                        icon = Icon(Icons.visibility_off_outlined,color: colorsName,);
                       }
 
                     });
@@ -162,10 +163,12 @@ class _SignUpPageState extends State<SignUpPage> {
         );
       }else{
           return new TextField(
+            cursorColor: colorsName,
           controller: _userNameController,
           decoration: InputDecoration(
           prefixIcon: Icon(
           Icons.account_circle_outlined,
+            color: colorsName,
           ),
           border: InputBorder.none,
           fillColor: Color(0xfff5f5f6),

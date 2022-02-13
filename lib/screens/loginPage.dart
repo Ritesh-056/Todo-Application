@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   String loginPassword = "";
   bool securePass = true;
   var count =0;
-  Icon icon = Icon(Icons.visibility_off_outlined);
+  Icon icon = Icon(Icons.visibility_off_outlined,color: colorsName,);
 
 
 
@@ -145,7 +145,6 @@ class _LoginPageState extends State<LoginPage> {
           isLoading = true;
         });
         signInWithGoogle();
-
       },
       child: Container(
         height: 50,
@@ -186,13 +185,19 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 alignment: Alignment.center,
                 child: isLoading
-                    ? CircularProgressIndicator(
-                    color: Colors.white)
-                    : Text('Continue with Google',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
+                    ? Padding(
+                      padding: const EdgeInsets.only(right: 32.0,top: 8,bottom: 8),
+                      child: CircularProgressIndicator(
+                      color: Colors.white),
+                    )
+                    : Padding(
+                      padding: const EdgeInsets.only(right: 32.0),
+                      child: Text('Continue with Google',
+                      style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600)),
+                    ),
               ),
             ),
           ],
@@ -255,12 +260,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 10,),
                     TextField(
+                      cursorColor: colorsName,
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.email_outlined),
+                          prefixIcon: Icon(Icons.email_outlined,color: colorsName,),
                           border: InputBorder.none,
                           fillColor: Color(0xfff5f5f6),
+                          hoverColor: colorsName,
                           filled: true),
 
                     ),
@@ -273,23 +280,23 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 10,),
                     TextField(
+                      cursorColor: colorsName,
                       controller: _passwordController,
                       obscureText: securePass,
                       decoration: InputDecoration(
-                          prefixIcon:Icon(Icons.lock_outlined),
+                          prefixIcon:Icon(Icons.lock_outlined,color: colorsName,),
                           suffixIcon: IconButton(
                              icon: icon,
-                             onPressed: (){
+                            color: colorsName,
+                            onPressed: (){
                                setState(() {
-
                                  count++;
-
                                  if(count % 2 != 0){
                                     securePass = false;
-                                    icon = Icon(Icons.visibility_outlined);
+                                    icon = Icon(Icons.visibility_outlined,color: colorsName,);
                                   }else{
                                     securePass = true;
-                                    icon = Icon(Icons.visibility_off_outlined);
+                                    icon = Icon(Icons.visibility_off_outlined,color: colorsName,);
                                   }
 
                                });

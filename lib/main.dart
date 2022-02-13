@@ -43,7 +43,7 @@ class LoginDesign extends StatelessWidget {
       theme: ThemeData(
         primaryColor: colorsName,
         iconTheme: new IconThemeData(
-          color: Colors.black87,
+          color: colorsName
         ),
         fontFamily: 'Monotype Coursiva',
         colorScheme: ColorScheme.fromSwatch().copyWith(
