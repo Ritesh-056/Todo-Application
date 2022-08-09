@@ -10,6 +10,7 @@ import 'package:flutter_app/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app/screens/insert_task.dart';
 import 'package:flutter_app/screens/updateTask.dart';
+import 'package:flutter_app/widgets/reusable_widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -84,16 +85,7 @@ class _TodoHomeState extends State<TodoHome> {
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            tooltip: 'Add task',
-            backgroundColor: colorsName,
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddTaskHome()));
-            },
-          ),
+          floatingActionButton: TodoFloatingActionButton(context,custom: true),
           body: showTodoList(context),
         ));
   }

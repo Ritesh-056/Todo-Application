@@ -5,10 +5,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/showDetails/showTask.dart';
+import 'package:flutter_app/widgets/reusable_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../const.dart';
-
 
 
 
@@ -76,13 +76,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
 
     return new SafeArea(
         child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.close),
-            backgroundColor: colorsName,
-            onPressed: () {
-               Navigator.pop(context);
-            },
-          ),
+          floatingActionButton:TodoFloatingActionButton(context),
           body: Center(
             child: new Stack(
                 fit: StackFit.passthrough,
