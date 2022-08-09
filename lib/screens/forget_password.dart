@@ -129,7 +129,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             child: SafeArea(
               child: new Stack(
                   fit: StackFit.passthrough,
-                  overflow: Overflow.visible,
                   children: [
                     Positioned(
                       top:-80.0,

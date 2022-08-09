@@ -47,7 +47,6 @@ class _AddTaskHomeState extends State<AddTaskHome> {
       body: Center(
         child: new Stack(
             fit: StackFit.passthrough,
-            overflow: Overflow.visible,
             children: [
               Positioned(
                 top: -80.0,
