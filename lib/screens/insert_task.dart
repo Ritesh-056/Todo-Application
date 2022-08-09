@@ -3,8 +3,11 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/showDetails/showTask.dart';
+import 'package:flutter_app/widgets/reusable_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../main.dart';
+import '../const.dart';
+import '../functions/dart/reusable_functions.dart';
+
 
 class AddTaskHome extends StatefulWidget {
   @override
@@ -20,30 +23,13 @@ class _AddTaskHomeState extends State<AddTaskHome> {
   User user = FirebaseAuth.instance.currentUser;
   var documentRef = FirebaseFirestore.instance.collection('todos');
 
-  Widget toast(text){
-    Fluttertoast.showToast(
-        msg: text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 5,
-        fontSize: 16.0
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return new SafeArea(
         child: Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.close),
-        backgroundColor: colorsName,
-        onPressed: () {
-          setState(() {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => TodoHome()));
-          });
-        },
-      ),
+      floatingActionButton: TodoFloatingActionButton(context),
       body: Center(
         child: new Stack(
             fit: StackFit.passthrough,
@@ -174,7 +160,7 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => TodoHome()));
-                            toast('Added Successfully');
+                            todoToast('Added Successfully');
                           } else {
                             showModalBottomSheet(
                                 context: context,

@@ -7,6 +7,8 @@ import 'package:flutter_app/components/customContainer.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/screens/loginPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../const.dart';
+
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key, this.title}) : super(key: key);

@@ -4,9 +4,10 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/loginPage.dart';
+import 'package:flutter_app/widgets/reusable_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../const.dart';
 
-import '../main.dart';
 
 
 
@@ -116,15 +117,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   Widget build(BuildContext context) {
     return new SafeArea(
         child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            child:Icon(Icons.close),
-            backgroundColor: colorsName,
-            onPressed: (){
-               Navigator.pop(context);
-            },
-          ),
-
-
+          floatingActionButton: TodoFloatingActionButton(context),
           body:Center(
             child: SafeArea(
               child: new Stack(

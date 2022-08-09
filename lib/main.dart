@@ -7,6 +7,7 @@ import 'package:flutter_app/screens/signUpPage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
+import 'const.dart';
 import 'showDetails/showTask.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -14,12 +15,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'screens/loginPage.dart';
-import 'package:workmanager/workmanager.dart';
 
 
-const text_color_white = Colors.white;
-const padding_number = 8.0;
-Color colorsName = Colors.green[500];
 var auth = FirebaseAuth.instance;
 BuildContext mContext;
 
@@ -35,6 +32,9 @@ Future<void> main() async {
 
 class LoginDesign extends StatelessWidget {
 
+  double iconSize = 100;
+  int durationTime  = 3000;
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,20 +49,25 @@ class LoginDesign extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch().copyWith(
             secondary: colorsName), //3, //3
       ),
-      home: new SafeArea(
-        child: Scaffold(
-          body: AnimatedSplashScreen(
-            duration: 3000,
-            splash: new Image.asset('assets/Spinner.gif'),
-            splashTransition: SplashTransition.slideTransition,
-            backgroundColor: text_color_white,
-            splashIconSize: 100,
-            nextScreen: auth.currentUser?.uid == null
-                ? LoginPage()
-                : TodoHome(
-                email: auth.currentUser.email,
-                password: null),
-          ),
+      home:loadHome(),
+    );
+  }
+
+
+  Widget loadHome() {
+    return SafeArea(
+      child: Scaffold(
+        body: AnimatedSplashScreen(
+          duration: durationTime,
+          splash: new Image.asset('assets/Spinner.gif'),
+          splashTransition: SplashTransition.slideTransition,
+          backgroundColor: text_color_white,
+          splashIconSize: iconSize,
+          nextScreen: auth.currentUser?.uid == null
+              ? LoginPage()
+              : TodoHome(
+              email: auth.currentUser.email,
+              password: null),
         ),
       ),
     );

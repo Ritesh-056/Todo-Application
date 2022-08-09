@@ -15,6 +15,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../const.dart';
+import '../functions/dart/reusable_functions.dart';
+
 
 class TodoHome extends StatefulWidget {
   final String password, email;
@@ -47,16 +50,6 @@ class _TodoHomeState extends State<TodoHome> {
   GoogleSignIn _googleSignIn = GoogleSignIn();
   var documentRef = FirebaseFirestore.instance.collection('todos');
 
-
-  Widget toast(text) {
-    Fluttertoast.showToast(
-        msg: text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 5,
-        fontSize: 16.0
-    );
-  }
 
 
   PopupMenuEntry itemMenuList(itemValue, itemTitle) {
@@ -111,7 +104,7 @@ class _TodoHomeState extends State<TodoHome> {
     _signOutFirebase();
     _signOutGoogle();
 
-    toast('Log out Successful');
+    todoToast('Log out Successful');
   }
 
 
@@ -394,7 +387,7 @@ class _TodoHomeState extends State<TodoHome> {
         .collection('user_todo')
         .doc(docId)
         .delete();
-    toast('Deleted Successfully');
+    todoToast('Deleted Successfully');
 
     Navigator.of(context).pop();
   }
