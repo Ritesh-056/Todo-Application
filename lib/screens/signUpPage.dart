@@ -4,6 +4,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/customContainer.dart';
+import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/screens/loginPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -50,46 +51,6 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
 
-  void _modelBox(text){
-
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                  leading: new Icon(
-                    Icons.error,
-                    size: 50,
-                    color: colorsName),
-                  title: new Text(
-                      'Oops...!',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700)),
-                  subtitle: new Text(
-                      text,
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700)),
-                  trailing: new IconButton(
-                    icon: Icon(Icons.close),
-                    iconSize: 20,
-                    color: Color.fromRGBO(20, 20, 20, 0.9),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-
-                ),
-              ],
-            ),
-          );
-        });
-  }
 
   Widget _backButton() {
     return InkWell(
@@ -180,7 +141,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
           }
     }
-
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -223,20 +183,20 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
             }else{
-              _modelBox("Make sure you have inserted your email, password and username.");
+              todoModelBox(context,"Make sure you have inserted your email, password and username.");
             }
           } on FirebaseAuthException catch (e){
 
             String text = 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
             if(e.message == text){
               print('No internet available');
-              return _modelBox('No Internet Available');
+               todoModelBox(context,'No Internet Available');
             }
-            _modelBox('${e.message}');
+            todoModelBox(context,'${e.message}');
             print("========Error[firebaseAuth]========");
             print(e.message);
           } catch(ex){
-            _modelBox('${ex.toString()}');
+            todoModelBox(context, '${ex.toString()}');
             print("========Error[Catch]========");
             print(ex.toString());
 

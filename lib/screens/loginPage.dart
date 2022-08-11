@@ -5,6 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/components/customContainer.dart';
+import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/screens/forget_password.dart';
 import 'package:flutter_app/screens/signUpPage.dart';
 import 'package:flutter_app/showDetails/showTask.dart';
@@ -97,46 +98,6 @@ class _LoginPageState extends State<LoginPage> {
 
 
   
-  void _modelBox(text){
-
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                  leading: new Icon(
-                    Icons.error,
-                    size: 50,
-                    color: colorsName),
-                  title: new Text(
-                      'Oops...!',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700)),
-                  subtitle: new Text(
-                      text,
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700)),
-                  trailing: new IconButton(
-                    icon: Icon(Icons.close),
-                    iconSize: 20,
-                    color: Color.fromRGBO(20, 20, 20, 0.9),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-
-                ),
-              ],
-            ),
-          );
-        });
-  }
 
 
 
@@ -315,14 +276,14 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () async {
 
                         // if( isConnecting == false){
-                        //   return _modelBox('No Internet Available');
+                        //   return todoModelBox(context('No Internet Available');
                         // }
 
                           try{
                             if(_emailController.text.length ==0 &&
                                 _passwordController.text.length ==0){
 
-                              _modelBox('Make sure you have inserted email and password.');
+                              todoModelBox(context,'Make sure you have inserted email and password.');
 
                             }else{
                               await auth.signInWithEmailAndPassword(
@@ -339,7 +300,7 @@ class _LoginPageState extends State<LoginPage> {
                                 _passwordController.clear();
 
                               } else {
-                                _modelBox('No account signed in.');
+                                todoModelBox(context,'No account signed in.');
                               }
 
                             }
@@ -349,16 +310,16 @@ class _LoginPageState extends State<LoginPage> {
 
                             if(ex.message == text){
                               print('No internet available');
-                              return _modelBox('No Internet Available');
+                              return todoModelBox(context,'No Internet Available');
                             }
 
                             print('${ex.message}');
-                            _modelBox('${ex.message}');
+                            todoModelBox(context,'${ex.message}');
 
                           } catch(e){
                             print("==========Error[catch]=============");
                             print('${e.toString()}');
-                            _modelBox('${e.toString()}');
+                            todoModelBox(context,'${e.toString()}');
 
                           }
                         },
@@ -479,7 +440,7 @@ class _LoginPageState extends State<LoginPage> {
       print("==========Error[FirebaseAuth]=============");
 
       print('${ex.message}');
-      _modelBox('${ex.message}');
+      todoModelBox(context,'${ex.message}');
 
     }
       catch(e){
@@ -490,10 +451,10 @@ class _LoginPageState extends State<LoginPage> {
       String errorResult = 'PlatformException(network_error, com.google.android.gms.common.api.ApiException: 7: , null, null)';
       if( e.toString() == errorResult){
         print('No internet Available');
-        return _modelBox('No Internet Available');
+        return todoModelBox(context,'No Internet Available');
       }
       print('${e.toString()}');
-      _modelBox('${e.toString()}');
+      todoModelBox(context,'${e.toString()}');
 
       }
   }

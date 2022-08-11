@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/screens/loginPage.dart';
 import 'package:flutter_app/widgets/reusable_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,57 +22,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   var _emailController = new TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
-
-  void toast(text){
-    Fluttertoast.showToast(
-        msg: text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 5,
-        fontSize: 16.0
-    );
-  }
-
-
-  void _modelBox(text){
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                  leading: new Icon(
-                    Icons.error,
-                    size: 50,
-                    color: colorsName,),
-                  title: new Text(
-                      'Oops...!',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700)),
-                  subtitle: new Text(
-                      text,
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700)),
-                  trailing: new IconButton(
-                    icon: Icon(Icons.close),
-                    iconSize: 20,
-                    color: Color.fromRGBO(20, 20, 20, 0.9),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-
-                ),
-              ],
-            ),
-          );
-        });
-  }
 
 
   showAlertDialog(BuildContext context) {
@@ -199,7 +149,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
                                        try{
                                          if(_emailController.text.isEmpty){
-                                            _modelBox(
+                                            todoModelBox(context,
                                                'Please,make sure you have inserted email.');
                                          }else{
                                            await auth.sendPasswordResetEmail(
@@ -213,15 +163,15 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                          String errorResult = 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
                                          if( ex.message == errorResult){
                                            print('No internet Available');
-                                            _modelBox('No Internet Available');
+                                            todoModelBox(context,'No Internet Available');
                                          }
                                          print('${ex.message}');
-                                         _modelBox('${ex.message}');
+                                         todoModelBox(context,'${ex.message}');
 
                                        } catch(e){
                                          print("==========Error[catch]=============");
                                          print('${e.toString()}');
-                                         _modelBox('${e.toString()}');
+                                         todoModelBox(context, '${e.toString()}');
 
                                        }
                                   },

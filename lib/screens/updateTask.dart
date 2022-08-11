@@ -3,6 +3,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/showDetails/showTask.dart';
 import 'package:flutter_app/widgets/reusable_widgets.dart';
@@ -215,7 +216,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
                                         builder: (context) => TodoHome(email:null,password:null)));
                                 toast('Updated Successfully');
                               } else {
-                                 showModel('Make sure you have inserted task, date and time.');
+                                 todoModelBox(context, 'Make sure you have inserted task, date and time.');
                               }
                           },
                           child: Padding(
@@ -244,46 +245,6 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
         ));
   }
 
-  void showModel(text){
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                  leading: new Icon(
-                    Icons.error,
-                    size: 50,
-                    color:
-                    colorsName,
-                  ),
-                  title: new Text('Oops...!',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700)),
-                  subtitle: new Text(
-                      text,
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700)),
-                  trailing: new IconButton(
-                    icon: Icon(Icons.close),
-                    iconSize: 20,
-                    color:
-                    Color.fromRGBO(20, 20, 20, 0.9),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
 
 
 }
