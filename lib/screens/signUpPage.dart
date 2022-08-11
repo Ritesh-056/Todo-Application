@@ -11,9 +11,9 @@ import '../const.dart';
 
 
 class SignUpPage extends StatefulWidget {
-  SignUpPage({Key key, this.title}) : super(key: key);
+  SignUpPage({Key? key, this.title}) : super(key: key);
 
-  final String title;
+  final String? title;
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -21,7 +21,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   FirebaseAuth auth = FirebaseAuth.instance;
-  Future<UserCredential> userCredential ;
+  Future<UserCredential>? userCredential ;
 
 
 
@@ -39,7 +39,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
 
-  Widget toast(text){
+  void toast(text){
     Fluttertoast.showToast(
         msg: text,
         toastLength: Toast.LENGTH_SHORT,
@@ -48,7 +48,9 @@ class _SignUpPageState extends State<SignUpPage> {
         fontSize: 16.0
     );
   }
-  Widget _modelBox(text){
+
+
+  void _modelBox(text){
 
     showModalBottomSheet(
         context: context,
@@ -236,7 +238,7 @@ class _SignUpPageState extends State<SignUpPage> {
           } catch(ex){
             _modelBox('${ex.toString()}');
             print("========Error[Catch]========");
-            print(ex.message);
+            print(ex.toString());
 
           }
       },
@@ -256,7 +258,7 @@ class _SignUpPageState extends State<SignUpPage> {
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: [ colorsName, colorsName])),
+                colors: [ colorsName!, colorsName!])),
         child: Text(
           'Sign Up',
           style: TextStyle(

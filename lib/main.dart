@@ -18,7 +18,7 @@ import 'screens/loginPage.dart';
 
 
 var auth = FirebaseAuth.instance;
-BuildContext mContext;
+BuildContext? mContext;
 
 
 // this is main methods for
@@ -66,7 +66,7 @@ class LoginDesign extends StatelessWidget {
           nextScreen: auth.currentUser?.uid == null
               ? LoginPage()
               : TodoHome(
-              email: auth.currentUser.email,
+              email: auth.currentUser!.email,
               password: null),
         ),
       ),

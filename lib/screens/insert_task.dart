@@ -16,11 +16,11 @@ class AddTaskHome extends StatefulWidget {
 
 class _AddTaskHomeState extends State<AddTaskHome> {
   final TextEditingController eCtrl = new TextEditingController();
-  var listItem = "";
-  var dateTimePicker = "";
+  String? listItem = "";
+  String? dateTimePicker = "";
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  User user = FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
   var documentRef = FirebaseFirestore.instance.collection('todos');
 
 
@@ -94,7 +94,7 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                         child: Theme(
                           data: Theme.of(context).copyWith(
                             colorScheme: ColorScheme.light(
-                              primary: colorsName,
+                              primary: colorsName!,
                             ),
                           ),
                           child: DateTimePicker(
@@ -140,11 +140,11 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                     new GestureDetector(
                       onTap: () {
                         setState(() {
-                          if (listItem.isNotEmpty &&
-                              dateTimePicker.isNotEmpty) {
-                            if (user.uid != null) {
+                          if (listItem!.isNotEmpty &&
+                              dateTimePicker!.isNotEmpty) {
+                            if (user!.uid != null) {
                               documentRef
-                                  .doc(auth.currentUser.uid)
+                                  .doc(auth.currentUser!.uid)
                                   .collection('user_todo')
                                   .doc()
                                   .set({
@@ -159,7 +159,7 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => TodoHome()));
+                                    builder: (context) => TodoHome(email: '', password: '',)));
                             todoToast('Added Successfully');
                           } else {
                             showModalBottomSheet(

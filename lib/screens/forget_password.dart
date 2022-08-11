@@ -22,7 +22,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  Widget toast(text){
+  void toast(text){
     Fluttertoast.showToast(
         msg: text,
         toastLength: Toast.LENGTH_SHORT,
@@ -33,7 +33,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   }
 
 
-  Widget _modelBox(text){
+  void _modelBox(text){
     showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -199,7 +199,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
                                        try{
                                          if(_emailController.text.isEmpty){
-                                           return _modelBox(
+                                            _modelBox(
                                                'Please,make sure you have inserted email.');
                                          }else{
                                            await auth.sendPasswordResetEmail(
@@ -213,7 +213,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                          String errorResult = 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
                                          if( ex.message == errorResult){
                                            print('No internet Available');
-                                           return _modelBox('No Internet Available');
+                                            _modelBox('No Internet Available');
                                          }
                                          print('${ex.message}');
                                          _modelBox('${ex.message}');

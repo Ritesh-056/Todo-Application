@@ -21,12 +21,12 @@ import '../functions/dart/reusable_functions.dart';
 
 
 class TodoHome extends StatefulWidget {
-  final String password, email;
+  final String? password, email;
 
   TodoHome({
-    Key key,
-    @required this.email,
-    @required this.password,
+    Key? key,
+    required this.email,
+    required this.password,
   });
 
   @override
@@ -36,19 +36,20 @@ class TodoHome extends StatefulWidget {
 class _TodoHomeState extends State<TodoHome> {
 
 
-  BuildContext mContext;
-
   var title, date;
   var counter = 0;
   int helloAlarmID = 1;
   var itemValue;
   var docId;
+  BuildContext? mContext;
 
-  final TextEditingController eCtrl = new TextEditingController();
+
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  User user = FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
   GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  final TextEditingController eCtrl = new TextEditingController();
   var documentRef = FirebaseFirestore.instance.collection('todos');
 
 
@@ -81,12 +82,15 @@ class _TodoHomeState extends State<TodoHome> {
                   itemMenuList(1, "Sign out"),
                   itemMenuList(2, "Exit")
                 ],
-                onSelected: (item) => SelectedItem(context, item),
+                onSelected: (dynamic item) => SelectedItem(context, item),
               ),
             ],
           ),
           floatingActionButton: TodoFloatingActionButton(context,custom: true),
-          body: showTodoList(context),
+          body:Center(
+            child: Text('Task should be here'),
+          )
+          // body: showTodoList(context),
         ));
   }
 
@@ -170,14 +174,14 @@ class _TodoHomeState extends State<TodoHome> {
   }
 
 
-  Future<LoginPage> _signOutFirebase() async {
+  Future<LoginPage?> _signOutFirebase() async {
     await FirebaseAuth.instance.signOut();
     return Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
 
-  Future<LoginPage> _signOutGoogle() async {
+  Future<LoginPage?> _signOutGoogle() async {
     await _googleSignIn.signOut();
     return Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
@@ -188,91 +192,91 @@ class _TodoHomeState extends State<TodoHome> {
     exit(0);
   }
 
-
-  showTodoList(BuildContext context) {
-    if (FirebaseAuth.instance.currentUser?.uid != null) {
-      return new Container(
-        child: new StreamBuilder(
-            stream:
-            documentRef.doc(user.uid).collection('user_todo').snapshots(),
-            builder: (context, snapShot) {
-              mContext = context;
-
-              if (snapShot.hasData) {
-                final List<DocumentSnapshot> documents = snapShot.data.docs;
-
-                if (documents.isNotEmpty) {
-                  return ListView(
-                      children: documents
-                          .map((doc) =>
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            shadowColor: Colors.black45,
-                            elevation: 10,
-                            child: ListTile(
-                              leading: Icon(
-                                Icons.event,
-                                color: Colors.black54,
-                                size: 30,
-                              ),
-                              title: Text(
-                                doc['title'],
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              subtitle: Text(
-                                doc['date'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              // trailing: Icon(Icons.delete,color: colorsName,size: 30, ),
-                              trailing: IconButton(
-                                tooltip: 'Delete',
-                                onPressed: () {
-                                  docId = doc.id;
-                                  showAlertDialog(context,
-                                      "Are you sure want to delete ?",
-                                      "Confirm",
-                                      "Delete Task",
-                                      funcTaskDelete);
-                                },
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: colorsName,
-                                  size: 30,
-                                ),
-                              ),
-                              //goto task screen.
-                              onTap: () {
-                                Navigator.push(
-                                    context, MaterialPageRoute(
-                                    builder: (context) =>
-                                        UpdateTodoData(title: doc['title'],
-                                            date: doc['date'],
-                                            docsId: doc.id)));
-                              },
-                            ),
-                          ))
-                          .toList());
-
-
-                } else {
-                  return funcShowEmptyData();
-                }
-              } else if (snapShot.hasError) {
-                return Center(child: Container(
-                    child: Text("It's Error! Something went wrong")));
-              }
-              return funcShowLoadingProgress();
-            }),
-      );
-    } else {
-      return new Center(
-          child: Container(
-            child: Text('Sorry no user found.'),
-          ));
-    }
-  }
+  //
+  // showTodoList(BuildContext context) {
+  //   if (FirebaseAuth.instance.currentUser?.uid != null) {
+  //     return new Container(
+  //       child: new StreamBuilder(
+  //           stream:
+  //           documentRef.doc(user!.uid).collection('user_todo').snapshots(),
+  //           builder: (context, snapShot) {
+  //             mContext = context;
+  //
+  //             if (snapShot.hasData) {
+  //               final List<DocumentSnapshot> documents = snapShot.data!.docs;
+  //
+  //               if (documents.isNotEmpty) {
+  //                 return ListView(
+  //                     children: documents
+  //                         .map((doc) =>
+  //                         Card(
+  //                           shape: RoundedRectangleBorder(
+  //                             borderRadius: BorderRadius.circular(10.0),
+  //                           ),
+  //                           shadowColor: Colors.black45,
+  //                           elevation: 10,
+  //                           child: ListTile(
+  //                             leading: Icon(
+  //                               Icons.event,
+  //                               color: Colors.black54,
+  //                               size: 30,
+  //                             ),
+  //                             title: Text(
+  //                               doc['title'],
+  //                               style: TextStyle(fontSize: 15),
+  //                             ),
+  //                             subtitle: Text(
+  //                               doc['date'],
+  //                               style: TextStyle(fontSize: 12),
+  //                             ),
+  //                             // trailing: Icon(Icons.delete,color: colorsName,size: 30, ),
+  //                             trailing: IconButton(
+  //                               tooltip: 'Delete',
+  //                               onPressed: () {
+  //                                 docId = doc.id;
+  //                                 showAlertDialog(context,
+  //                                     "Are you sure want to delete ?",
+  //                                     "Confirm",
+  //                                     "Delete Task",
+  //                                     funcTaskDelete);
+  //                               },
+  //                               icon: Icon(
+  //                                 Icons.delete,
+  //                                 color: colorsName,
+  //                                 size: 30,
+  //                               ),
+  //                             ),
+  //                             //goto task screen.
+  //                             onTap: () {
+  //                               Navigator.push(
+  //                                   context, MaterialPageRoute(
+  //                                   builder: (context) =>
+  //                                       UpdateTodoData(title: doc['title'],
+  //                                           date: doc['date'],
+  //                                           docsId: doc.id)));
+  //                             },
+  //                           ),
+  //                         ))
+  //                         .toList());
+  //
+  //
+  //               } else {
+  //                 return funcShowEmptyData();
+  //               }
+  //             } else if (snapShot.hasError) {
+  //               return Center(child: Container(
+  //                   child: Text("It's Error! Something went wrong")));
+  //             }
+  //             return funcShowLoadingProgress();
+  //           }),
+  //     );
+  //   } else {
+  //     return new Center(
+  //         child: Container(
+  //           child: Text('Sorry no user found.'),
+  //         ));
+  //   }
+  // }
 
 
 
@@ -336,7 +340,7 @@ class _TodoHomeState extends State<TodoHome> {
         children: [
           ColorPicker(
             // showLabel: false,
-            pickerColor: colorsName,
+            pickerColor: colorsName!,
             showLabel: false,
             labelTextStyle:
             TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
@@ -375,7 +379,7 @@ class _TodoHomeState extends State<TodoHome> {
 
   void funcTaskDelete() {
     documentRef
-        .doc(user.uid)
+        .doc(user!.uid)
         .collection('user_todo')
         .doc(docId)
         .delete();

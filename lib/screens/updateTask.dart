@@ -39,11 +39,11 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
 
 
     var documentsRef = FirebaseFirestore.instance.collection('todos')
-       .doc(auth.currentUser.uid)
+       .doc(auth.currentUser!.uid)
        .collection('user_todo');
 
 
-   void checkDocs(String value1,String value2){
+   void checkDocs(String? value1,String? value2){
      documentsRef
          .doc(docsId)
          .update({
@@ -53,7 +53,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
    }
 
 
-   Widget toast(text){
+   void toast(text){
      Fluttertoast.showToast(
          msg: text,
          toastLength: Toast.LENGTH_SHORT,
@@ -145,7 +145,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
                             child: Theme(
                               data: Theme.of(context).copyWith(
                                 colorScheme: ColorScheme.light(
-                                  primary: colorsName,
+                                  primary: colorsName!,
                                 ),
                               ),
                               child: DateTimePicker(
@@ -185,7 +185,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
                               if (
                                   updatedDate !=null &&
                                   updatedTitle !=null) {
-                                if (auth.currentUser.uid != null) {
+                                if (auth.currentUser!.uid != null) {
                                   try {
                                          if( countTitle > 0 && countDate >0){
                                           checkDocs(updatedTitle, updatedDate);
@@ -244,7 +244,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
         ));
   }
 
-  Widget showModel(text){
+  void showModel(text){
     showModalBottomSheet(
         context: context,
         builder: (context) {

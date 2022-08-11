@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
-  Future<UserCredential> userCredential;
+  Future<UserCredential>? userCredential;
   bool isLoading = false;
   String loginEmail = "";
   String loginPassword = "";
@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  Widget dialog(){
+  void dialog(){
    showDialog(
       context: context,
       barrierDismissible: false,
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
 
 
   
-  Widget _modelBox(text){
+  void _modelBox(text){
 
     showModalBottomSheet(
         context: context,
@@ -329,12 +329,12 @@ class _LoginPageState extends State<LoginPage> {
                                   email: _emailController.text,
                                   password: _passwordController.text);
 
-                              if(auth.currentUser.uid !=null){
+                              if(auth.currentUser!.uid !=null){
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            TodoHome(email: auth.currentUser.email, password: null)));
+                                            TodoHome(email: auth.currentUser!.email, password: null)));
                                 _emailController.clear();
                                 _passwordController.clear();
 
@@ -452,7 +452,7 @@ class _LoginPageState extends State<LoginPage> {
 
 
     try{
-      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount googleUser = await (GoogleSignIn().signIn() as FutureOr<GoogleSignInAccount>);
       final GoogleSignInAuthentication googleAuth =
       await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -462,7 +462,7 @@ class _LoginPageState extends State<LoginPage> {
 
       await auth.signInWithCredential(credential);
 
-      if (auth.currentUser.uid != null) {
+      if (auth.currentUser!.uid != null) {
         setState(() {
           isLoading = false;
         });
@@ -470,7 +470,7 @@ class _LoginPageState extends State<LoginPage> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    TodoHome(email: auth.currentUser.email, password: null)));
+                    TodoHome(email: auth.currentUser!.email, password: null)));
       }
     } on FirebaseAuthException catch(ex){
       setState(() {
