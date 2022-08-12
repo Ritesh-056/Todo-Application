@@ -6,59 +6,42 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/const.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/main.dart';
+import 'package:flutter_app/provider/generic_function_provider.dart';
 import 'package:flutter_app/showDetails/showTask.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 
 
 signInWithGoogle(BuildContext context) async {
 
-  bool isLoading ;
-
   try{
-    final GoogleSignInAccount googleUser = await (GoogleSignIn().signIn() as FutureOr<GoogleSignInAccount>);
-    final GoogleSignInAuthentication googleAuth =
-    await googleUser.authentication;
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth =
+    await googleUser?.authentication;
     final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
     );
-
-    await auth.signInWithCredential(credential);
-
-    if (auth.currentUser!.uid != null) {
-      // setState(() {
-      //   isLoading = false;
-      // });
-      return Navigator.push(
+   final response  =  await auth.signInWithCredential(credential);
+    if (response.user!.uid.isNotEmpty) {
+      Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
                   TodoHome(email: auth.currentUser!.email, password: null)));
+    } else {
+      todoModelBox(context, 'Google login failed');
+      Provider.of<GenericHelperProvider>(context).checkLoading = false;
     }
-  } on FirebaseAuthException catch(ex){
-    // setState(() {
-    //   isLoading = false;
-    // });
-    print("==========Error[FirebaseAuth]=============");
-
-    print('${ex.message}');
-    todoModelBox(context,'${ex.message}');
-
-  }
-  catch(e){
-    // setState(() {
-    //   isLoading = false;
-    // });
-    print("==========Error[catch]=============");
-    String errorResult = 'PlatformException(network_error, com.google.android.gms.common.api.ApiException: 7: , null, null)';
-    if( e.toString() == errorResult){
-      print('No internet Available');
-      return todoModelBox(context,'No Internet Available');
+  }  on FirebaseAuthException catch (ex) {
+    if (ex.message == noInternetError) {
+      todoModelBox(context, 'No Internet Available');
     }
-    print('${e.toString()}');
-    todoModelBox(context,'${e.toString()}');
+  } catch (ex) {
+    todoModelBox(context, '${ex.toString()}');
   }
 }

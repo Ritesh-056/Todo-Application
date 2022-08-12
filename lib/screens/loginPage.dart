@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/components/customContainer.dart';
 import 'package:flutter_app/functions/dart/authentication_function.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
+import 'package:flutter_app/login_functions/email_password_login.dart';
+import 'package:flutter_app/provider/generic_function_provider.dart';
 import 'package:flutter_app/provider/password_field_checker.dart';
 import 'package:flutter_app/screens/forget_password.dart';
 import 'package:flutter_app/screens/signUpPage.dart';
@@ -154,49 +156,9 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 50,
             ),
+
             InkWell(
-              onTap: () async {
-                try {
-                  if (_emailController.text.length == 0 &&
-                      _passwordController.text.length == 0) {
-                    todoModelBox(context,
-                        'Make sure you have inserted email and password.');
-                  } else {
-                    await auth.signInWithEmailAndPassword(
-                        email: _emailController.text,
-                        password: _passwordController.text);
-
-                    if (auth.currentUser!.uid != null) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => TodoHome(
-                                  email: auth.currentUser!.email,
-                                  password: null)));
-                      _emailController.clear();
-                      _passwordController.clear();
-                    } else {
-                      todoModelBox(context, 'No account signed in.');
-                    }
-                  }
-                } on FirebaseAuthException catch (ex) {
-                  print("==========Error[FirebaseAuth]=============");
-                  String text =
-                      'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
-
-                  if (ex.message == text) {
-                    print('No internet available');
-                    return todoModelBox(context, 'No Internet Available');
-                  }
-
-                  print('${ex.message}');
-                  todoModelBox(context, '${ex.message}');
-                } catch (e) {
-                  print("==========Error[catch]=============");
-                  print('${e.toString()}');
-                  todoModelBox(context, '${e.toString()}');
-                }
-              },
+              onTap: validInputEmailPassword,
               child: Container(
                 height: 50,
                 child: Center(
@@ -231,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             _divider(),
-            _GoogleButton(),
+            _GoogleLoginContainer(),
             SizedBox(
               height: 10,
             ),
@@ -307,12 +269,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _GoogleButton() {
+  Widget _GoogleLoginContainer() {
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          isLoading = true;
-        });
+      onTap:(){
+        Provider.of<GenericHelperProvider>(context,listen: false).onGoogleLoginPressed();
         signInWithGoogle(context);
       },
       child: Container(
@@ -351,7 +311,7 @@ class _LoginPageState extends State<LoginPage> {
                       topRight: Radius.circular(50)),
                 ),
                 alignment: Alignment.center,
-                child: isLoading
+                child: context.watch<GenericHelperProvider>().checkLoading
                     ? Padding(
                         padding: const EdgeInsets.only(
                             right: 32.0, top: 8, bottom: 8),
@@ -371,5 +331,18 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+
+  void validInputEmailPassword(){
+
+    if(_emailController.text.isEmpty){
+      todoModelBox(context, 'please insert email');
+    }
+    if(_passwordController.text.isEmpty){
+      todoModelBox(context, 'please insert password');
+    }else{
+      onEmailPasswordLogin(context,_emailController.text, _passwordController.text);
+    }
   }
 }
