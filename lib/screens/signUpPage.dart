@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/components/customContainer.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/main.dart';
+import 'package:flutter_app/provider/password_field_checker.dart';
 import 'package:flutter_app/screens/loginPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import '../const.dart';
-
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key? key, this.title}) : super(key: key);
@@ -22,34 +23,22 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   FirebaseAuth auth = FirebaseAuth.instance;
-  Future<UserCredential>? userCredential ;
+  Future<UserCredential>? userCredential;
 
-
-
-  var _emailController    = new TextEditingController();
+  var _emailController = new TextEditingController();
   var _passwordController = new TextEditingController();
   var _userNameController = new TextEditingController();
 
-  String registerEmail    ="";
-  String registerPassword ="";
-  String registerUsername ="";
+  String registerEmail = "";
+  String registerPassword = "";
+  String registerUsername = "";
 
   bool securePass = true;
-  var count =0;
-  Icon icon = Icon(Icons.visibility_off_outlined,color: colorsName,);
-
-
-
-  void toast(text){
-    Fluttertoast.showToast(
-        msg: text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 5,
-        fontSize: 16.0
-    );
-  }
-
+  var count = 0;
+  Icon icon = Icon(
+    Icons.visibility_off_outlined,
+    color: colorsName,
+  );
 
 
   Widget _backButton() {
@@ -61,14 +50,12 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Row(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(
-                  left: 0,
-                  top: 10,
-                  bottom: 10),
+              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
               child: Icon(
                 Icons.keyboard_arrow_left,
                 color: colorsName,
-                size: 40,),
+                size: 40,
+              ),
             ),
             Text('Back',
                 style: TextStyle(
@@ -81,66 +68,66 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _entryField(String title,String tracker) {
-
-    Widget _checkField(){
-
-      if(tracker == "e"){
+  Widget _entryField(String title, String tracker) {
+    Widget _checkField() {
+      if (tracker == "e") {
         return new TextField(
             cursorColor: colorsName,
             keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             decoration: InputDecoration(
-                prefixIcon: Icon(Icons.email_outlined,color: colorsName,),
-                border: InputBorder.none,
-                fillColor: Color(0xfff5f5f6),
-                filled: true)
-        );
-
-      }else if( tracker  == "p"){
-        return new TextField(
-            cursorColor: colorsName,
-            obscureText: securePass,
-            controller: _passwordController,
-            decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock_outlined,color: colorsName,),
-                suffixIcon: IconButton(
-                  icon: icon,
-                  onPressed: (){
-                    setState(() {
-
-                      count++;
-
-                      if(count % 2 != 0){
-                        securePass = false;
-                        icon = Icon(Icons.visibility_outlined,color: colorsName,);
-                      }else{
-                        securePass = true;
-                        icon = Icon(Icons.visibility_off_outlined,color: colorsName,);
-                      }
-
-                    });
-                  },
+                prefixIcon: Icon(
+                  Icons.email_outlined,
+                  color: colorsName,
                 ),
                 border: InputBorder.none,
                 fillColor: Color(0xfff5f5f6),
-                filled: true)
-        );
-      }else{
-          return new TextField(
+                filled: true));
+      } else if (tracker == "p") {
+        return new TextField(
             cursorColor: colorsName,
-          controller: _userNameController,
-          decoration: InputDecoration(
-          prefixIcon: Icon(
-          Icons.account_circle_outlined,
-            color: colorsName,
-          ),
-          border: InputBorder.none,
-          fillColor: Color(0xfff5f5f6),
-          filled: true));
-
-          }
+            obscureText: Provider.of<PasswordVisibility>(context).pass_visible,
+            controller: _passwordController,
+            decoration: InputDecoration(
+                prefixIcon: Icon(
+                  Icons.lock_outlined,
+                  color: colorsName,
+                ),
+                suffixIcon: Consumer<PasswordVisibility>(
+                  builder: (context, passCheck, child) => IconButton(
+                    icon: passCheck.pass_visible
+                        ? Icon(
+                            Icons.visibility_off_outlined,
+                            color: colorsName,
+                          )
+                        : Icon(
+                            Icons.visibility_outlined,
+                            color: colorsName,
+                          ),
+                    color: colorsName,
+                    onPressed: () {
+                      passCheck.enablePasswordVisibility();
+                    },
+                  ),
+                ),
+                border: InputBorder.none,
+                fillColor: Color(0xfff5f5f6),
+                filled: true));
+      } else {
+        return new TextField(
+            cursorColor: colorsName,
+            controller: _userNameController,
+            decoration: InputDecoration(
+                prefixIcon: Icon(
+                  Icons.account_circle_outlined,
+                  color: colorsName,
+                ),
+                border: InputBorder.none,
+                fillColor: Color(0xfff5f5f6),
+                filled: true));
+      }
     }
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -153,83 +140,69 @@ class _SignUpPageState extends State<SignUpPage> {
           SizedBox(
             height: 10,
           ),
-           _checkField(),
+          _checkField(),
         ],
       ),
     );
   }
 
-
-
-
   Widget _submitButton() => GestureDetector(
-      onTap: () async {
-
-
-          try{
-            if(_emailController.text.length > 0 &&
-                _passwordController.text.length >0  &&
-                _userNameController.text.length > 0){
-
-              await  auth.createUserWithEmailAndPassword(
+        onTap: () async {
+          try {
+            if (_emailController.text.length > 0 &&
+                _passwordController.text.length > 0 &&
+                _userNameController.text.length > 0) {
+              await auth.createUserWithEmailAndPassword(
                   email: _emailController.text,
                   password: _passwordController.text);
 
-              toast('SignUp Successful...!');
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context)=>LoginPage()));
-
-
-            }else{
-              todoModelBox(context,"Make sure you have inserted your email, password and username.");
+              todoToast('SignUp Successful...!');
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginPage()));
+            } else {
+              todoModelBox(context,
+                  "Make sure you have inserted your email, password and username.");
             }
-          } on FirebaseAuthException catch (e){
-
-            String text = 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
-            if(e.message == text){
+          } on FirebaseAuthException catch (e) {
+            String text =
+                'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
+            if (e.message == text) {
               print('No internet available');
-               todoModelBox(context,'No Internet Available');
+              todoModelBox(context, 'No Internet Available');
             }
-            todoModelBox(context,'${e.message}');
+            todoModelBox(context, '${e.message}');
             print("========Error[firebaseAuth]========");
             print(e.message);
-          } catch(ex){
+          } catch (ex) {
             todoModelBox(context, '${ex.toString()}');
             print("========Error[Catch]========");
             print(ex.toString());
-
           }
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(50)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [ colorsName!, colorsName!])),
-        child: Text(
-          'Sign Up',
-          style: TextStyle(
-              fontSize: 15,
-              color: Colors.white,
-              fontWeight: FontWeight.w600),
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.symmetric(vertical: 15),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.grey.shade200,
+                    offset: Offset(2, 4),
+                    blurRadius: 5,
+                    spreadRadius: 2)
+              ],
+              gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [colorsName!, colorsName!])),
+          child: Text(
+            'Sign Up',
+            style: TextStyle(
+                fontSize: 15, color: Colors.white, fontWeight: FontWeight.w600),
+          ),
         ),
-      ),
-    );
-
-
+      );
 
   Widget _loginAccountLabel() {
     return InkWell(
@@ -252,7 +225,7 @@ class _SignUpPageState extends State<SignUpPage> {
               width: 10,
             ),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 setState(() {
                   Navigator.pop(context);
                 });
@@ -278,19 +251,16 @@ class _SignUpPageState extends State<SignUpPage> {
         color: colorsName,
         fontSize: 20,
         fontWeight: FontWeight.w700,
-
       ),
     );
   }
 
-
-
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Username","u"),
-        _entryField("Email ","e"),
-        _entryField("Password","p"),
+        _entryField("Username", "u"),
+        _entryField("Email ", "e"),
+        _entryField("Password", "p"),
       ],
     );
   }
@@ -310,7 +280,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 right: -MediaQuery.of(context).size.width * .4,
                 child: BezierContainer(),
               ),
-               Container(
+              Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: SingleChildScrollView(
                   child: Column(
@@ -330,11 +300,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(height: height * .14),
                       _loginAccountLabel(),
                     ],
-
                   ),
                 ),
               ),
-
               Positioned(top: 0, left: 0, child: _backButton()),
             ],
           ),
@@ -342,7 +310,4 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
-
-
 }
-

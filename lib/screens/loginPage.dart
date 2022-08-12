@@ -7,14 +7,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/components/customContainer.dart';
 import 'package:flutter_app/functions/dart/authentication_function.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
+import 'package:flutter_app/provider/password_field_checker.dart';
 import 'package:flutter_app/screens/forget_password.dart';
 import 'package:flutter_app/screens/signUpPage.dart';
 import 'package:flutter_app/showDetails/showTask.dart';
 import 'package:flutter_app/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import '../const.dart';
-
 
 class LoginPage extends StatefulWidget {
   // final String title;
@@ -23,25 +24,21 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-
-
 class _LoginPageState extends State<LoginPage> {
-
   bool isLoading = false;
   String loginEmail = "";
   String loginPassword = "";
   bool securePass = true;
-  var count =0;
+  var count = 0;
   FirebaseAuth auth = FirebaseAuth.instance;
   Future<UserCredential>? userCredential;
 
-
-
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  Icon icon = Icon(Icons.visibility_off_outlined,color: colorsName,);
-
-
+  Icon icon = Icon(
+    Icons.visibility_off_outlined,
+    color: colorsName,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +46,9 @@ class _LoginPageState extends State<LoginPage> {
     return SafeArea(
       child: Scaffold(
           body: Container(
-           height: height,
-           child: Stack(
-            children: <Widget>[
-
-
+        height: height,
+        child: Stack(
+          children: <Widget>[
             Positioned(
               top: 25,
               left: 20,
@@ -65,24 +60,18 @@ class _LoginPageState extends State<LoginPage> {
 
             Positioned(
                 top: -height * .15,
-                right: -MediaQuery
-                    .of(context)
-                    .size
-                    .width * .4,
+                right: -MediaQuery.of(context).size.width * .4,
                 child: BezierContainer()),
 
             LoginHomeContainer(height),
-              // Positioned(top: 20, left: 0, child: _backButton()),
+            // Positioned(top: 20, left: 0, child: _backButton()),
           ],
         ),
       )),
     );
   }
 
-
-
-
-  Widget LoginHomeContainer(double height){
+  Widget LoginHomeContainer(double height) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: SingleChildScrollView(
@@ -104,53 +93,59 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 50),
             Text(
               'Email',
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             TextField(
               cursorColor: colorsName,
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email_outlined,color: colorsName,),
+                  prefixIcon: Icon(
+                    Icons.email_outlined,
+                    color: colorsName,
+                  ),
                   border: InputBorder.none,
                   fillColor: Color(0xfff5f5f6),
                   hoverColor: colorsName,
                   filled: true),
-
             ),
             SizedBox(height: 20),
             Text(
               'Password',
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             TextField(
               cursorColor: colorsName,
               controller: _passwordController,
-              obscureText: securePass,
+              obscureText:
+                  Provider.of<PasswordVisibility>(context).pass_visible,
               decoration: InputDecoration(
-                  prefixIcon:Icon(Icons.lock_outlined,color: colorsName,),
-                  suffixIcon: IconButton(
-                    icon: icon,
+                  prefixIcon: Icon(
+                    Icons.lock_outlined,
                     color: colorsName,
-                    onPressed: (){
-                      setState(() {
-                        count++;
-                        if(count % 2 != 0){
-                          securePass = false;
-                          icon = Icon(Icons.visibility_outlined,color: colorsName,);
-                        }else{
-                          securePass = true;
-                          icon = Icon(Icons.visibility_off_outlined,color: colorsName,);
-                        }
-
-                      });
-                    },
+                  ),
+                  suffixIcon: Consumer<PasswordVisibility>(
+                    builder: (context, passCheck, child) => IconButton(
+                      icon: passCheck.pass_visible
+                          ? Icon(
+                              Icons.visibility_off_outlined,
+                              color: colorsName,
+                            )
+                          : Icon(
+                              Icons.visibility_outlined,
+                              color: colorsName,
+                            ),
+                      color: colorsName,
+                      onPressed: () {
+                        passCheck.enablePasswordVisibility();
+                      },
+                    ),
                   ),
                   border: InputBorder.none,
                   fillColor: Color(0xfff5f5f6),
@@ -161,50 +156,45 @@ class _LoginPageState extends State<LoginPage> {
             ),
             InkWell(
               onTap: () async {
-
-
-                try{
-                  if(_emailController.text.length ==0 &&
-                      _passwordController.text.length ==0){
-
-                    todoModelBox(context,'Make sure you have inserted email and password.');
-
-                  }else{
+                try {
+                  if (_emailController.text.length == 0 &&
+                      _passwordController.text.length == 0) {
+                    todoModelBox(context,
+                        'Make sure you have inserted email and password.');
+                  } else {
                     await auth.signInWithEmailAndPassword(
                         email: _emailController.text,
                         password: _passwordController.text);
 
-                    if(auth.currentUser!.uid !=null){
+                    if (auth.currentUser!.uid != null) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  TodoHome(email: auth.currentUser!.email, password: null)));
+                              builder: (context) => TodoHome(
+                                  email: auth.currentUser!.email,
+                                  password: null)));
                       _emailController.clear();
                       _passwordController.clear();
-
                     } else {
-                      todoModelBox(context,'No account signed in.');
+                      todoModelBox(context, 'No account signed in.');
                     }
-
                   }
-                } on FirebaseAuthException catch(ex){
+                } on FirebaseAuthException catch (ex) {
                   print("==========Error[FirebaseAuth]=============");
-                  String text = 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
+                  String text =
+                      'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
 
-                  if(ex.message == text){
+                  if (ex.message == text) {
                     print('No internet available');
-                    return todoModelBox(context,'No Internet Available');
+                    return todoModelBox(context, 'No Internet Available');
                   }
 
                   print('${ex.message}');
-                  todoModelBox(context,'${ex.message}');
-
-                } catch(e){
+                  todoModelBox(context, '${ex.message}');
+                } catch (e) {
                   print("==========Error[catch]=============");
                   print('${e.toString()}');
-                  todoModelBox(context,'${e.toString()}');
-
+                  todoModelBox(context, '${e.toString()}');
                 }
               },
               child: Container(
@@ -219,25 +209,26 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 decoration: BoxDecoration(
-                    color: colorsName,
-                    borderRadius: BorderRadius.circular(20)),
+                    color: colorsName, borderRadius: BorderRadius.circular(20)),
               ),
             ),
+
             ///submit button
             Container(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () { Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context)=>ForgetPassword()));
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ForgetPassword()));
                 },
                 child: Text('Forgot Password ?',
                     style: TextStyle(
                         fontSize: 13,
-                        color:colorsName,
-                        fontWeight: FontWeight.w400)
-                ),),
+                        color: colorsName,
+                        fontWeight: FontWeight.w400)),
+              ),
             ),
             _divider(),
             _GoogleButton(),
@@ -247,11 +238,8 @@ class _LoginPageState extends State<LoginPage> {
             InkWell(
               onTap: () {
                 print('tapped');
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SignUpPage()));
-
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SignUpPage()));
               },
               child: Container(
                 margin: EdgeInsets.symmetric(vertical: 20),
@@ -262,8 +250,8 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     Text(
                       'Don\'t have an account ?',
-                      style: TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w600),
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                     ),
                     SizedBox(
                       width: 10,
@@ -285,9 +273,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   Widget _divider() {
-
     return Container(
       margin: EdgeInsets.symmetric(vertical: 15),
       child: Row(
@@ -304,10 +290,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           Text('Social',
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400)
-          ),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400)),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -324,8 +307,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
-
   Widget _GoogleButton() {
     return GestureDetector(
       onTap: () {
@@ -338,8 +319,7 @@ class _LoginPageState extends State<LoginPage> {
         height: 50,
         margin: EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-              Radius.circular(10)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         child: Row(
           children: <Widget>[
@@ -361,7 +341,6 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.w600)),
               ),
             ),
-
             Expanded(
               flex: 5,
               child: Container(
@@ -374,18 +353,18 @@ class _LoginPageState extends State<LoginPage> {
                 alignment: Alignment.center,
                 child: isLoading
                     ? Padding(
-                  padding: const EdgeInsets.only(right: 32.0,top: 8,bottom: 8),
-                  child: CircularProgressIndicator(
-                      color: Colors.white),
-                )
+                        padding: const EdgeInsets.only(
+                            right: 32.0, top: 8, bottom: 8),
+                        child: CircularProgressIndicator(color: Colors.white),
+                      )
                     : Padding(
-                  padding: const EdgeInsets.only(right: 32.0),
-                  child: Text('Continue with Google',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600)),
-                ),
+                        padding: const EdgeInsets.only(right: 32.0),
+                        child: Text('Continue with Google',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600)),
+                      ),
               ),
             ),
           ],
@@ -393,9 +372,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
-
-
-
 }
