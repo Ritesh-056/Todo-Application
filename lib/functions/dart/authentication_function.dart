@@ -1,5 +1,3 @@
-
-
 //function to login user from google
 import 'dart:async';
 
@@ -14,20 +12,23 @@ import 'package:flutter_app/showDetails/showTask.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
-
-
 signInWithGoogle(BuildContext context) async {
 
-  try{
+
+  try {
+
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication? googleAuth =
-    await googleUser?.authentication;
+        await googleUser?.authentication;
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-   final response  =  await auth.signInWithCredential(credential);
+
+    final response = await auth.signInWithCredential(credential);
+
     if (response.user!.uid.isNotEmpty) {
+      Provider.of<GenericHelperProvider>(context).checkLoading = false;
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -37,7 +38,9 @@ signInWithGoogle(BuildContext context) async {
       todoModelBox(context, 'Google login failed');
       Provider.of<GenericHelperProvider>(context).checkLoading = false;
     }
-  }  on FirebaseAuthException catch (ex) {
+
+
+  } on FirebaseAuthException catch (ex) {
     if (ex.message == noInternetError) {
       todoModelBox(context, 'No Internet Available');
     }

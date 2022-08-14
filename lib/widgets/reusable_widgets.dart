@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../const.dart';
 
 Widget TodoFloatingActionButton(BuildContext context, {bool custom = false}) {
+
  return custom ?  FloatingActionButton(
           child: Icon(Icons.add),
           tooltip: 'Add task',
