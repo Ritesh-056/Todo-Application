@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/functions/dart/create_new_password.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/screens/loginPage.dart';
 import 'package:flutter_app/widgets/reusable_widgets.dart';
@@ -107,37 +108,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
                               SizedBox(height: 20,),
                               new GestureDetector(
-                                onTap: () async {
-
-
-                                       try{
-                                         if(_emailController.text.isEmpty){
-                                            todoModelBox(context,
-                                               'Please,make sure you have inserted email.');
-                                         }else{
-                                           await auth.sendPasswordResetEmail(
-                                               email:_emailController.text );
-
-                                           showAlertDialog(context);
-                                         }
-                                       } on FirebaseAuthException catch(ex){
-                                         print("==========Error[FirebaseAuth]=============");
-
-                                         String errorResult = 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
-                                         if( ex.message == errorResult){
-                                           print('No internet Available');
-                                            todoModelBox(context,'No Internet Available');
-                                         }
-                                         print('${ex.message}');
-                                         todoModelBox(context,'${ex.message}');
-
-                                       } catch(e){
-                                         print("==========Error[catch]=============");
-                                         print('${e.toString()}');
-                                         todoModelBox(context, '${e.toString()}');
-
-                                       }
-                                  },
+                                onTap: validateEmail,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                   child: new Container(
@@ -180,42 +151,15 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         ));
 
   }
-  showAlertDialog(BuildContext context) {
-    // set up the buttons
-    Widget okayButton = TextButton(
-      child: Text("Okay",
-          style:TextStyle(color: colorsName)),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
 
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Center(
-        child: Text(
-          "Check your email",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-      ),
-
-      content: Text(
-        "Please check the email for resetting the password.",
-        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-      ),
-      actions: [
-        okayButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
+  void validateEmail(){
+    if(_emailController.text.isEmpty){
+      todoModelBox(context,
+          'Please, make sure you have inserted email.');
+    }else{
+      sendRecoveryEmail(context, _emailController.text);
+    }
   }
 
 }
