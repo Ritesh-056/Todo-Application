@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/customContainer.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
+import 'package:flutter_app/login_functions/email_password_register.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/provider/password_field_checker.dart';
 import 'package:flutter_app/screens/loginPage.dart';
@@ -147,38 +148,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _submitButton() => GestureDetector(
-        onTap: () async {
-          try {
-            if (_emailController.text.length > 0 &&
-                _passwordController.text.length > 0 &&
-                _userNameController.text.length > 0) {
-              await auth.createUserWithEmailAndPassword(
-                  email: _emailController.text,
-                  password: _passwordController.text);
-
-              todoToast('SignUp Successful...!');
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
-            } else {
-              todoModelBox(context,
-                  "Make sure you have inserted your email, password and username.");
-            }
-          } on FirebaseAuthException catch (e) {
-            String text =
-                'A network error (such as timeout, interrupted connection or unreachable host) has occurred.';
-            if (e.message == text) {
-              print('No internet available');
-              todoModelBox(context, 'No Internet Available');
-            }
-            todoModelBox(context, '${e.message}');
-            print("========Error[firebaseAuth]========");
-            print(e.message);
-          } catch (ex) {
-            todoModelBox(context, '${ex.toString()}');
-            print("========Error[Catch]========");
-            print(ex.toString());
-          }
-        },
+        onTap: validInputEmailPasswordToRegister,
         child: Container(
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.symmetric(vertical: 15),
@@ -309,5 +279,18 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+
+  void validInputEmailPasswordToRegister(){
+
+    if(_emailController.text.isEmpty){
+      todoModelBox(context, 'please insert email');
+    }
+    if(_passwordController.text.isEmpty){
+      todoModelBox(context, 'please insert password');
+    }else{
+      onRegisterUser(context,_emailController.text, _passwordController.text);
+    }
   }
 }
