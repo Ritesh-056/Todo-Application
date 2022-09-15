@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/const.dart';
 
-
 showAlertDialog(BuildContext context) {
   // set up the buttons
   Widget okayButton = TextButton(
-    child: Text("Okay",
-        style:TextStyle(color: colorsName)),
+    child: Text("Okay", style: TextStyle(color: colorsName)),
     onPressed: () {
       Navigator.pop(context);
     },
   );
-
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
@@ -21,7 +18,6 @@ showAlertDialog(BuildContext context) {
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
     ),
-
     content: Text(
       "Please check the email for resetting the password.",
       style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),

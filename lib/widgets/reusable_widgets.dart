@@ -4,8 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../const.dart';
 
 Widget TodoFloatingActionButton(BuildContext context, {bool custom = false}) {
-
- return custom ?  FloatingActionButton(
+  return custom
+      ? FloatingActionButton(
           child: Icon(Icons.add),
           tooltip: 'Add task',
           backgroundColor: colorsName,
@@ -14,7 +14,7 @@ Widget TodoFloatingActionButton(BuildContext context, {bool custom = false}) {
                 MaterialPageRoute(builder: (context) => AddTaskHome()));
           },
         )
-      :  FloatingActionButton(
+      : FloatingActionButton(
           child: Icon(Icons.close),
           backgroundColor: colorsName,
           onPressed: () {

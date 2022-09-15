@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_app/provider/generic_function_provider.dart';
 import 'package:flutter_app/provider/password_field_checker.dart';
-import 'package:flutter_app/screens/signUpPage.dart';
+import 'package:flutter_app/screens/sign_up.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +15,8 @@ import 'showDetails/showTask.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 //flutter packages importing
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'screens/loginPage.dart';
+import 'screens/login_page.dart';
 
 var auth = FirebaseAuth.instance;
 BuildContext? mContext;
@@ -28,8 +27,8 @@ Future<void> main() async {
   await Firebase.initializeApp();
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (context)=> PasswordVisibility()),
-      ChangeNotifierProvider(create: (context)=> GenericHelperProvider()),
+      ChangeNotifierProvider(create: (context) => PasswordVisibility()),
+      ChangeNotifierProvider(create: (context) => GenericHelperProvider()),
     ],
     child: LoginDesign(),
   ));

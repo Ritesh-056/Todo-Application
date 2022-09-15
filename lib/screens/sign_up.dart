@@ -8,7 +8,7 @@ import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/login_functions/email_password_register.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/provider/password_field_checker.dart';
-import 'package:flutter_app/screens/loginPage.dart';
+import 'package:flutter_app/screens/login_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../const.dart';
@@ -40,7 +40,6 @@ class _SignUpPageState extends State<SignUpPage> {
     Icons.visibility_off_outlined,
     color: colorsName,
   );
-
 
   Widget _backButton() {
     return InkWell(
@@ -281,16 +280,14 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-
-  void validInputEmailPasswordToRegister(){
-
-    if(_emailController.text.isEmpty){
+  void validInputEmailPasswordToRegister() {
+    if (_emailController.text.isEmpty) {
       todoModelBox(context, 'please insert email');
     }
-    if(_passwordController.text.isEmpty){
+    if (_passwordController.text.isEmpty) {
       todoModelBox(context, 'please insert password');
-    }else{
-      onRegisterUser(context,_emailController.text, _passwordController.text);
+    } else {
+      onRegisterUser(context, _emailController.text, _passwordController.text);
     }
   }
 }

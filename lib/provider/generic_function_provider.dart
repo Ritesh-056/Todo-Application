@@ -1,13 +1,10 @@
 import 'package:flutter/widgets.dart';
 
-class GenericHelperProvider extends ChangeNotifier{
+class GenericHelperProvider extends ChangeNotifier {
+  bool checkLoading = false;
 
-  bool checkLoading =false;
-
-
-  void onGoogleLoginPressed(){
-     checkLoading = true;
-     notifyListeners();
+  void onGoogleLoginPressed() {
+    checkLoading = true;
+    notifyListeners();
   }
-
 }

@@ -6,17 +6,15 @@ import 'package:flutter_app/main.dart';
 import 'package:flutter_app/widgets/alert_dialog.dart';
 
 void sendRecoveryEmail(BuildContext context, String inputEmail) async {
-    try{
-        await auth.sendPasswordResetEmail(
-            email:inputEmail );
+  try {
+    await auth.sendPasswordResetEmail(email: inputEmail);
 
-        showAlertDialog(context);
-
-    } on FirebaseAuthException catch (ex) {
-      if (ex.message == noInternetError) {
-        todoModelBox(context, 'No Internet Available');
-      }
-    } catch (e) {
-      todoModelBox(context, '${e.toString()}');
+    showAlertDialog(context);
+  } on FirebaseAuthException catch (ex) {
+    if (ex.message == noInternetError) {
+      todoModelBox(context, 'No Internet Available');
     }
+  } catch (e) {
+    todoModelBox(context, '${e.toString()}');
+  }
 }

@@ -13,10 +13,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 signInWithGoogle(BuildContext context) async {
-
-
   try {
-
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
@@ -28,7 +25,8 @@ signInWithGoogle(BuildContext context) async {
     final response = await auth.signInWithCredential(credential);
 
     if (response.user!.uid.isNotEmpty) {
-      Provider.of<GenericHelperProvider>(context).checkLoading = false;
+      Provider.of<GenericHelperProvider>(context, listen: false).checkLoading =
+          false;
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -36,10 +34,9 @@ signInWithGoogle(BuildContext context) async {
                   TodoHome(email: auth.currentUser!.email, password: null)));
     } else {
       todoModelBox(context, 'Google login failed');
-      Provider.of<GenericHelperProvider>(context).checkLoading = false;
+      Provider.of<GenericHelperProvider>(context, listen: false).checkLoading =
+          false;
     }
-
-
   } on FirebaseAuthException catch (ex) {
     if (ex.message == noInternetError) {
       todoModelBox(context, 'No Internet Available');
