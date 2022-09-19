@@ -16,7 +16,7 @@ onEmailPasswordLogin(
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  TodoHome(email: auth.currentUser!.email, password: null)));
+                  TodoHome()));
     } else {
       todoModelBox(context, 'Login failed');
     }

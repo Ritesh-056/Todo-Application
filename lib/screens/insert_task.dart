@@ -178,9 +178,7 @@ class _AddTaskHomeState extends State<AddTaskHome> {
             context,
             MaterialPageRoute(
                 builder: (context) => TodoHome(
-                      email: '',
-                      password: '',
-                    )));
+                     )));
 
         todoToast('Added Successfully');
       } catch (ex) {

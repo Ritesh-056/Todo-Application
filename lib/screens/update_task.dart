@@ -190,7 +190,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  TodoHome(email: null, password: null)));
+                                  TodoHome()));
                       toast('Updated Successfully');
                     } else {
                       todoModelBox(context,

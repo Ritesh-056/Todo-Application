@@ -22,13 +22,6 @@ import '../functions/dart/reusable_functions.dart';
 import '../functions/dart/todohome_functions.dart';
 
 class TodoHome extends StatefulWidget {
-  final String? password, email;
-
-  TodoHome({
-    Key? key,
-    required this.email,
-    required this.password,
-  });
 
   @override
   _TodoHomeState createState() => _TodoHomeState();

@@ -31,7 +31,7 @@ signInWithGoogle(BuildContext context) async {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  TodoHome(email: auth.currentUser!.email, password: null)));
+                  TodoHome()));
     } else {
       todoModelBox(context, 'Google login failed');
       Provider.of<GenericHelperProvider>(context, listen: false).checkLoading =

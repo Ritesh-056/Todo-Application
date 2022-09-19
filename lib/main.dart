@@ -64,7 +64,7 @@ class LoginDesign extends StatelessWidget {
           splashIconSize: iconSize,
           nextScreen: auth.currentUser?.uid == null
               ? LoginPage()
-              : TodoHome(email: auth.currentUser!.email, password: null),
+              : TodoHome(),
         ),
       ),
     );
