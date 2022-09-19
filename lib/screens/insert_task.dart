@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/showDetails/showTask.dart';
+import 'package:flutter_app/screens/todo_list_screen.dart';
+import 'package:flutter_app/string_constant.dart';
 import 'package:flutter_app/widgets/reusable_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../const.dart';
+import '../functions/dart/insert_and_update_todo.dart';
 import '../functions/dart/reusable_functions.dart';
 
 class AddTaskHome extends StatefulWidget {
@@ -16,12 +18,12 @@ class AddTaskHome extends StatefulWidget {
 }
 
 class _AddTaskHomeState extends State<AddTaskHome> {
-  String? listItem = "";
-  String? dateTimePicker = "";
+  TextEditingController _titleInsertController = TextEditingController();
+  TextEditingController _dateInsertController = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
   User? user = FirebaseAuth.instance.currentUser;
-  var documentRef = FirebaseFirestore.instance.collection('todos');
+  var collectionReferences = FirebaseFirestore.instance.collection('todos');
 
   @override
   Widget build(BuildContext context) {
@@ -55,37 +57,29 @@ class _AddTaskHomeState extends State<AddTaskHome> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: new TextField(
-                      cursorColor: colorsName,
-                      restorationId: "email_id",
-                      decoration: InputDecoration(
-                          hintText: "Insert Task", border: InputBorder.none),
-                      onChanged: (value) {
-                        setState(() => listItem = value);
-                      }),
+                    cursorColor: colorsName,
+                    restorationId: "email_id",
+                    controller: _titleInsertController,
+                    decoration: InputDecoration(
+                        hintText: "Insert Task", border: InputBorder.none),
+                  ),
                 ),
                 widgetDateTimePicker(),
                 SizedBox(
                   height: 10,
                 ),
                 new GestureDetector(
-                  onTap: onAssignTodoMethodClicked,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: new Container(
-                      height: 50,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: colorsName,
-                      ),
-                      child: Center(
-                          child: Text(
-                        'Assign',
-                        style: TextStyle(color: text_color_white, fontSize: 16),
-                      )),
-                    ),
-                  ),
-                )
+                    onTap: () {
+                      if (_titleInsertController.text.isEmpty)
+                        return todoModelBox(
+                            context, ErrorString.titleTodoError);
+                      if (_dateInsertController.text.isEmpty)
+                        return todoModelBox(
+                            context, ErrorString.dateAndTimeTodoError);
+                      onCreateNewTodo(context, _titleInsertController.text,
+                          _dateInsertController.text);
+                    },
+                    child: TodoGenericButton(context, "Assign"))
               ],
             ),
           )
@@ -131,59 +125,35 @@ class _AddTaskHomeState extends State<AddTaskHome> {
             ),
           ),
           child: DateTimePicker(
-              cursorColor: colorsName,
-              type: DateTimePickerType.dateTimeSeparate,
-              dateMask: 'd MMM, yyyy',
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2100),
-              icon: Icon(
-                Icons.event,
-                color: colorsName,
-                size: 30,
-              ),
-              dateLabelText: 'Date',
-              timeLabelText: "Hour",
-              selectableDayPredicate: (date) {
-                // Disable weekend days to select from the calendar
-                if (date.weekday == 6 || date.weekday == 7) {
-                  return false;
-                }
-                return true;
-              },
-              onChanged: (val) {
-                setState(() => dateTimePicker = val);
-              }),
+            controller: _dateInsertController,
+            cursorColor: colorsName,
+            type: DateTimePickerType.dateTimeSeparate,
+            dateMask: 'd MMM, yyyy',
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2100),
+            icon: Icon(
+              Icons.event,
+              color: colorsName,
+              size: 30,
+            ),
+            dateLabelText: 'Date',
+            timeLabelText: "Hour",
+            selectableDayPredicate: (date) {
+              // Disable weekend days to select from the calendar
+              if (date.weekday == 6 || date.weekday == 7) {
+                return false;
+              }
+              return true;
+            },
+          ),
         ));
+
   }
 
-  void onAssignTodoMethodClicked() {
-    if (listItem!.isEmpty) {
-      return todoModelBox(context, "Make sure you have inserted todo item.");
-    }
-
-    if (dateTimePicker!.isEmpty) {
-      return todoModelBox(
-          context, "Make sure you have inserted task, date and time.");
-    }
-
-    if (auth.currentUser!.uid.isNotEmpty) {
-      try {
-        documentRef
-            .doc(auth.currentUser!.uid)
-            .collection('user_todo')
-            .doc()
-            .set({'title': listItem, 'date': dateTimePicker});
-
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => TodoHome(
-                     )));
-
-        todoToast('Added Successfully');
-      } catch (ex) {
-        log("Exception while insert ${ex.toString()}");
-      }
-    }
+  @override
+  void dispose() {
+    _titleInsertController.dispose();
+    _dateInsertController.dispose();
+    super.dispose();
   }
 }

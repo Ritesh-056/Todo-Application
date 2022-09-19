@@ -1,15 +1,11 @@
 import 'dart:async';
 
-import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/customContainer.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/login_functions/email_password_register.dart';
-import 'package:flutter_app/main.dart';
 import 'package:flutter_app/provider/password_field_checker.dart';
-import 'package:flutter_app/screens/login_page.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../const.dart';
 

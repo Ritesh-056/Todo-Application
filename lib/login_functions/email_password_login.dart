@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/const.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/main.dart';
-import 'package:flutter_app/showDetails/showTask.dart';
+import 'package:flutter_app/screens/todo_list_screen.dart';
 
 onEmailPasswordLogin(
     BuildContext context, String inputEmail, String inputPassword) async {
@@ -13,10 +13,7 @@ onEmailPasswordLogin(
         email: inputEmail, password: inputPassword);
     if (response.user!.uid.isNotEmpty) {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  TodoHome()));
+          context, MaterialPageRoute(builder: (context) => TodoHome()));
     } else {
       todoModelBox(context, 'Login failed');
     }

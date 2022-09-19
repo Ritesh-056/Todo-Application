@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/const.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/main.dart';
+import 'package:flutter_app/provider/generic_function_provider.dart';
 import 'package:flutter_app/screens/login_page.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -43,8 +45,10 @@ Future<void> SelectedItem(BuildContext context, item) async {
 
     case 1:
       if (auth.currentUser?.uid != null) {
-        showAlertDialog(context, "Are you sure want to logout?", "Log out",
-            "Log out", funcSignOut);
+        showAlertDialog(
+            context, "Are you sure want to logout?", "Log out", "Log out", () {
+          funcSignOut(context);
+        });
       } else {
         print("No user found...!");
       }
@@ -73,22 +77,19 @@ colorPickerAlertDialog(BuildContext context) {
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ColorPicker(
-          // showLabel: false,
-          pickerColor: colorsName!,
-          showLabel: false,
-          labelTextStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          pickerAreaHeightPercent: 0.5,
-          onColorChanged: (colors) {
-            colorsName = colors;
-          },
-        ),
+      ColorPicker(
+            pickerColor: colorsName!,
+            pickerAreaHeightPercent: 0.5,
+            onColorChanged: (colors) {
+              colorsName = colors;
+            },
+          ),
         SizedBox(
           height: 20,
         ),
         TextButton(
           child: Text(
-            'SELECT',
+            'Close',
             style: TextStyle(fontSize: 13),
           ),
           onPressed: () {
@@ -109,7 +110,7 @@ colorPickerAlertDialog(BuildContext context) {
 }
 
 showAlertDialog(BuildContext context, alertTitle, doneButton, alertMainTitle,
-    callBackMethod) {
+    VoidCallback onPressAction) {
   // set up the buttons
   Widget cancelButton = TextButton(
     child: Text("Cancel", style: TextStyle(color: colorsName)),
@@ -119,7 +120,7 @@ showAlertDialog(BuildContext context, alertTitle, doneButton, alertMainTitle,
   );
   Widget continueButton = TextButton(
     child: Text(doneButton, style: TextStyle(color: colorsName)),
-    onPressed: callBackMethod,
+    onPressed: onPressAction,
   );
 
   // set up the AlertDialog

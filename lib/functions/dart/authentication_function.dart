@@ -8,7 +8,7 @@ import 'package:flutter_app/const.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/provider/generic_function_provider.dart';
-import 'package:flutter_app/showDetails/showTask.dart';
+import 'package:flutter_app/screens/todo_list_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
@@ -28,10 +28,7 @@ signInWithGoogle(BuildContext context) async {
       Provider.of<GenericHelperProvider>(context, listen: false).checkLoading =
           false;
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  TodoHome()));
+          context, MaterialPageRoute(builder: (context) => TodoHome()));
     } else {
       todoModelBox(context, 'Google login failed');
       Provider.of<GenericHelperProvider>(context, listen: false).checkLoading =

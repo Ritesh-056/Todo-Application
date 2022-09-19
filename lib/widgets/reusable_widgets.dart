@@ -22,3 +22,22 @@ Widget TodoFloatingActionButton(BuildContext context, {bool custom = false}) {
           },
         );
 }
+
+Widget TodoGenericButton(BuildContext context, String btnPerformingName) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    child: new Container(
+      height: 50,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: colorsName,
+      ),
+      child: Center(
+          child: Text(
+        btnPerformingName,
+        style: TextStyle(color: text_color_white, fontSize: 16),
+      )),
+    ),
+  );
+}

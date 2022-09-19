@@ -118,7 +118,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          '** Dear user, please check your email for resetting the new password. **',
+                          forgetPasswordMessageToUser,
                           style: TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 12),
                         ),
