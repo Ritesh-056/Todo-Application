@@ -16,13 +16,13 @@ onRegisterUser(
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
-      todoModelBox(context, "User registered failed");
+      return todoModelBox(context, "User registered failed");
     }
   } on FirebaseAuthException catch (ex) {
     if (ex.message == noInternetError) {
-      todoModelBox(context, 'No Internet Available');
+     return todoModelBox(context, 'No Internet Available');
     }
   } catch (e) {
-    todoModelBox(context, '${e.toString()}');
+    return todoModelBox(context, '${e.toString()}');
   }
 }

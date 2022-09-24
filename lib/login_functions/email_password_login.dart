@@ -15,13 +15,13 @@ onEmailPasswordLogin(
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => TodoHome()));
     } else {
-      todoModelBox(context, 'Login failed');
+      return todoModelBox(context, 'Login failed');
     }
   } on FirebaseAuthException catch (ex) {
     if (ex.message == noInternetError) {
-      todoModelBox(context, 'No Internet Available');
+      return todoModelBox(context, 'No Internet Available');
     }
   } catch (e) {
-    todoModelBox(context, '${e.toString()}');
+    return todoModelBox(context, '${e.toString()}');
   }
 }

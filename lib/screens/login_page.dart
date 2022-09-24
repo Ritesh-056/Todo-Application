@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/components/customContainer.dart';
 import 'package:flutter_app/functions/dart/authentication_function.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
+import 'package:flutter_app/geometry/geometric_container.dart';
 import 'package:flutter_app/login_functions/email_password_login.dart';
 import 'package:flutter_app/provider/generic_function_provider.dart';
 import 'package:flutter_app/provider/password_field_checker.dart';
@@ -63,10 +63,10 @@ class _LoginPageState extends State<LoginPage> {
             Positioned(
                 top: -height * .15,
                 right: -MediaQuery.of(context).size.width * .4,
-                child: BezierContainer()),
-
+                // child: BezierContainer()
+              child: ScreenGeometricCurve(),
+            ),
             LoginHomeContainer(height),
-            // Positioned(top: 20, left: 0, child: _backButton()),
           ],
         ),
       )),
@@ -336,10 +336,10 @@ class _LoginPageState extends State<LoginPage> {
 
   void validInputEmailPassword() {
     if (_emailController.text.isEmpty) {
-      todoModelBox(context, 'please insert email');
+      return todoModelBox(context, 'please insert email');
     }
     if (_passwordController.text.isEmpty) {
-      todoModelBox(context, 'please insert password');
+      return todoModelBox(context, 'please insert password');
     } else {
       onEmailPasswordLogin(
           context, _emailController.text, _passwordController.text);

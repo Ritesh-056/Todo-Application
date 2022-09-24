@@ -27,6 +27,7 @@ class _AddTaskHomeState extends State<AddTaskHome> {
 
   @override
   Widget build(BuildContext context) {
+
     return new SafeArea(
         child: Scaffold(
       floatingActionButton: TodoFloatingActionButton(context),
@@ -138,13 +139,6 @@ class _AddTaskHomeState extends State<AddTaskHome> {
             ),
             dateLabelText: 'Date',
             timeLabelText: "Hour",
-            selectableDayPredicate: (date) {
-              // Disable weekend days to select from the calendar
-              if (date.weekday == 6 || date.weekday == 7) {
-                return false;
-              }
-              return true;
-            },
           ),
         ));
 

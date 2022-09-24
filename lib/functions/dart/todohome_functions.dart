@@ -33,7 +33,7 @@ Future<LoginPage?> _signOutGoogle(BuildContext context) async {
       context, MaterialPageRoute(builder: (context) => LoginPage()));
 }
 
-void funcExit() {
+void funcExit(BuildContext context) {
   exit(0);
 }
 
@@ -46,8 +46,8 @@ Future<void> SelectedItem(BuildContext context, item) async {
     case 1:
       if (auth.currentUser?.uid != null) {
         showAlertDialog(
-            context, "Are you sure want to logout?", "Log out", "Log out", () {
-          funcSignOut(context);
+            context, "Are you sure want to logout?", "Log out", "Log out", (context) {
+              funcSignOut(context);
         });
       } else {
         print("No user found...!");
@@ -60,7 +60,9 @@ Future<void> SelectedItem(BuildContext context, item) async {
           "Are you sure want to exit ? App will close instantly.",
           "Exit",
           "Exit App",
-          funcExit);
+          (context){
+            funcExit(context);
+          });
       break;
   }
 }
@@ -109,8 +111,11 @@ colorPickerAlertDialog(BuildContext context) {
   );
 }
 
+
+
 showAlertDialog(BuildContext context, alertTitle, doneButton, alertMainTitle,
-    VoidCallback onPressAction) {
+    Function(BuildContext context) onPressAction ) {
+
   // set up the buttons
   Widget cancelButton = TextButton(
     child: Text("Cancel", style: TextStyle(color: colorsName)),
@@ -118,10 +123,15 @@ showAlertDialog(BuildContext context, alertTitle, doneButton, alertMainTitle,
       Navigator.pop(context);
     },
   );
+
   Widget continueButton = TextButton(
     child: Text(doneButton, style: TextStyle(color: colorsName)),
-    onPressed: onPressAction,
+    onPressed: (){
+      onPressAction(context);
+      Navigator.pop(context);
+    }
   );
+
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
@@ -150,6 +160,8 @@ showAlertDialog(BuildContext context, alertTitle, doneButton, alertMainTitle,
   );
 }
 
+
+
 Widget showLoadingPlaceHolder() => Center(
       child: Container(
         child: Padding(
@@ -170,6 +182,8 @@ Widget showLoadingPlaceHolder() => Center(
         ),
       ),
     );
+
+
 
 Widget showEmptyPlaceHolder() {
   return Center(

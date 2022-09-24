@@ -21,7 +21,8 @@ class _TodoHomeState extends State<TodoHome> {
 
   @override
   void initState() {
-    setState(() => collectionReference = FirebaseFirestore.instance
+    setState(() =>
+    collectionReference = FirebaseFirestore.instance
         .collection('todos')
         .doc(user!.uid)
         .collection("user_todo"));
@@ -32,24 +33,25 @@ class _TodoHomeState extends State<TodoHome> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-        backgroundColor:colorsName,
-        title: Text('Task',
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),
-        actions: [
-          PopupMenuButton(
-            itemBuilder: (context) => [
-              itemMenuList(0, "Theme"),
-              itemMenuList(1, "Sign out"),
-              itemMenuList(2, "Exit")
+          appBar: AppBar(
+            backgroundColor: colorsName,
+            title: Text('Task',
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),
+            actions: [
+              PopupMenuButton(
+                itemBuilder: (context) =>
+                [
+                  itemMenuList(0, "Theme"),
+                  itemMenuList(1, "Sign out"),
+                  itemMenuList(2, "Exit")
+                ],
+                onSelected: (dynamic item) => SelectedItem(context, item),
+              ),
             ],
-            onSelected: (dynamic item) => SelectedItem(context, item),
           ),
-        ],
-      ),
-      floatingActionButton: TodoFloatingActionButton(context, custom: true),
-      body: showTodoListData(context),
-    ));
+          floatingActionButton: TodoFloatingActionButton(context, custom: true),
+          body: showTodoListData(context),
+        ));
   }
 
   PopupMenuEntry itemMenuList(itemValue, itemTitle) {
@@ -82,7 +84,8 @@ class _TodoHomeState extends State<TodoHome> {
   getTodoListItems(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data!.docs
         .map(
-          (doc) => ListTile(
+          (doc) =>
+          ListTile(
             leading: Icon(
               Icons.event,
               color: colorsName,
@@ -97,7 +100,9 @@ class _TodoHomeState extends State<TodoHome> {
               style: TextStyle(fontSize: 12),
             ),
             trailing: GestureDetector(
-                onTap: () => deleteTodoItem(doc.id),
+                onTap: (){
+                  deleteTodoItem(context, doc.id);
+                },
                 child: Icon(
                   Icons.delete,
                   color: colorsName,
@@ -107,30 +112,28 @@ class _TodoHomeState extends State<TodoHome> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => UpdateTodoData(
-                          title: doc['title'],
-                          date: doc['date'],
-                          docsId: doc.id)));
+                      builder: (context) =>
+                          UpdateTodoData(
+                              title: doc['title'],
+                              date: doc['date'],
+                              docsId: doc.id)));
             },
           ),
-        )
+    )
         .toList();
   }
 
-  void deleteTodoItem(String docId) {
+  void deleteTodoItem(BuildContext context, String docId) {
     showAlertDialog(
-        context, "Are you sure want to delete todo?", "Delete", "Delete todo",
-        () {
-      deleteSelectedTodo(docId);
-    });
+        context, "Are you sure want to delete todo?", "Delete",
+        "Delete todo",
+            (context) async {
+          try {
+            await collectionReference.doc(docId).delete();
+          } catch (ex) {
+            log("Error! Todo deletion");
+          }
+        });
   }
 
-  void deleteSelectedTodo(String docId) async {
-    try {
-      await collectionReference.doc(docId).delete();
-      Navigator.of(context).pop();
-    } catch (ex) {
-      log("Error! Todo deletion");
-    }
-  }
 }

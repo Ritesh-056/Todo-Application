@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/components/customContainer.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/login_functions/email_password_register.dart';
 import 'package:flutter_app/provider/password_field_checker.dart';
 import 'package:provider/provider.dart';
 import '../const.dart';
+import '../geometry/geometric_container.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key? key, this.title}) : super(key: key);
@@ -243,7 +243,7 @@ class _SignUpPageState extends State<SignUpPage> {
               Positioned(
                 top: -MediaQuery.of(context).size.height * .15,
                 right: -MediaQuery.of(context).size.width * .4,
-                child: BezierContainer(),
+                child: ScreenGeometricCurve(),
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -278,10 +278,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void validInputEmailPasswordToRegister() {
     if (_emailController.text.isEmpty) {
-      todoModelBox(context, 'please insert email');
+      return todoModelBox(context, 'please insert email');
     }
     if (_passwordController.text.isEmpty) {
-      todoModelBox(context, 'please insert password');
+      return todoModelBox(context, 'please insert password');
     } else {
       onRegisterUser(context, _emailController.text, _passwordController.text);
     }
