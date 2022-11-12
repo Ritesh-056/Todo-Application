@@ -1,13 +1,10 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/todo_list_screen.dart';
 import 'package:flutter_app/string_constant.dart';
 import 'package:flutter_app/widgets/reusable_widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import '../const.dart';
 import '../functions/dart/insert_and_update_todo.dart';
 import '../functions/dart/reusable_functions.dart';

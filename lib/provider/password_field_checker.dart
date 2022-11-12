@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 class PasswordVisibility extends ChangeNotifier {
   bool pass_visible = true;

@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/const.dart';
 import 'package:flutter_app/geometry/custom_clipper.dart';
 

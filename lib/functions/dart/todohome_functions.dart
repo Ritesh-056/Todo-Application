@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/const.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/main.dart';
-import 'package:flutter_app/provider/generic_function_provider.dart';
 import 'package:flutter_app/screens/login_page.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn();
 

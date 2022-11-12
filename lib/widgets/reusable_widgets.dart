@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/insert_task.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import '../const.dart';
 
 Widget TodoFloatingActionButton(BuildContext context, {bool custom = false}) {

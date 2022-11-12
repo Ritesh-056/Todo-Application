@@ -1,16 +1,17 @@
 import 'dart:async';
+
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+//flutter packages importing
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/provider/generic_function_provider.dart';
 import 'package:flutter_app/provider/password_field_checker.dart';
 import 'package:provider/provider.dart';
-import 'const.dart';
-import 'screens/todo_list_screen.dart';
 
-//flutter packages importing
-import 'package:firebase_core/firebase_core.dart';
+import 'const.dart';
 import 'screens/login_page.dart';
+import 'screens/todo_list_screen.dart';
 
 var auth = FirebaseAuth.instance;
 BuildContext? mContext;

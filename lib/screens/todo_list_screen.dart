@@ -1,11 +1,11 @@
 import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_app/provider/generic_function_provider.dart';
 import 'package:flutter_app/screens/update_task.dart';
 import 'package:flutter_app/widgets/reusable_widgets.dart';
-import 'package:provider/provider.dart';
+
 import '../const.dart';
 import '../functions/dart/todohome_functions.dart';
 

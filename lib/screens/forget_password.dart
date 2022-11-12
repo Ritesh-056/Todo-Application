@@ -1,13 +1,9 @@
-import 'dart:async';
-
-import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/functions/dart/create_new_password.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
-import 'package:flutter_app/screens/login_page.dart';
 import 'package:flutter_app/widgets/reusable_widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import '../const.dart';
 
 class ForgetPassword extends StatefulWidget {
