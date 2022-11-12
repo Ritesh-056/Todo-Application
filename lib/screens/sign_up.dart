@@ -38,6 +38,14 @@ class _SignUpPageState extends State<SignUpPage> {
     color: colorsName,
   );
 
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   Widget _backButton() {
     return InkWell(
       onTap: () {

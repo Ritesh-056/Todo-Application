@@ -16,6 +16,13 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return new SafeArea(
@@ -138,3 +145,4 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     }
   }
 }
+
