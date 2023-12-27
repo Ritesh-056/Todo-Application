@@ -2,16 +2,14 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/functions/dart/reusable_functions.dart';
-import 'package:flutter_app/geometry/geometric_container.dart';
-import 'package:flutter_app/login_functions/email_password_login.dart';
-import 'package:flutter_app/provider/generic_function_provider.dart';
-import 'package:flutter_app/provider/password_field_checker.dart';
+import 'package:flutter_app/provider/service_provider.dart';
 import 'package:flutter_app/screens/forget_password.dart';
-import 'package:flutter_app/screens/sign_up.dart';
+import 'package:flutter_app/screens/sign_up_page.dart';
 import 'package:provider/provider.dart';
 
 import '../res/app_color.dart';
+import '../shared/geometry/geometric_container.dart';
+import '../utils/utils.dart';
 
 class LoginPage extends StatefulWidget {
   // final String title;
@@ -31,10 +29,6 @@ class _LoginPageState extends State<LoginPage> {
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  Icon icon = Icon(
-    Icons.visibility_off_outlined,
-    color: AppColor.kPrimaryAppColor,
-  );
 
   @override
   void dispose() {
@@ -66,14 +60,15 @@ class _LoginPageState extends State<LoginPage> {
               // child: BezierContainer()
               child: ScreenGeometricCurve(),
             ),
-            LoginHomeContainer(height),
+            _buildLogin(height),
           ],
         ),
       )),
     );
   }
 
-  Widget LoginHomeContainer(double height) {
+  Widget _buildLogin(double height) {
+    final serviceProvider = Provider.of<ServiceProvider>(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: SingleChildScrollView(
@@ -125,28 +120,23 @@ class _LoginPageState extends State<LoginPage> {
             TextField(
               cursorColor: AppColor.kPrimaryAppColor,
               controller: _passwordController,
-              obscureText:
-                  Provider.of<PasswordVisibility>(context).pass_visible,
+              obscureText: serviceProvider.isObscurePassword,
               decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock_outlined,
                     color: AppColor.kPrimaryAppColor,
                   ),
-                  suffixIcon: Consumer<PasswordVisibility>(
-                    builder: (context, passCheck, child) => IconButton(
-                      icon: passCheck.pass_visible
-                          ? Icon(
-                              Icons.visibility_off_outlined,
-                              color: AppColor.kPrimaryAppColor,
-                            )
-                          : Icon(
-                              Icons.visibility_outlined,
-                              color: AppColor.kPrimaryAppColor,
-                            ),
+                  suffixIcon: Consumer<ServiceProvider>(
+                    builder: (context, serviceProvider, child) => IconButton(
+                      icon: Icon(
+                        serviceProvider.isObscurePassword
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        color: AppColor.kPrimaryAppColor,
+                      ),
                       color: AppColor.kPrimaryAppColor,
-                      onPressed: () {
-                        passCheck.enablePasswordVisibility();
-                      },
+                      onPressed: () =>
+                          serviceProvider.changePasswordVisibility(),
                     ),
                   ),
                   border: InputBorder.none,
@@ -157,23 +147,27 @@ class _LoginPageState extends State<LoginPage> {
               height: 50,
             ),
 
-            InkWell(
-              onTap: validInputEmailPassword,
-              child: Container(
-                height: 50,
-                child: Center(
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+            serviceProvider.signInEmailLoading
+                ? Center(child: CircularProgressIndicator())
+                : InkWell(
+                    onTap: () => validInputEmailPassword(serviceProvider),
+                    child: Container(
+                      height: 45,
+                      child: Center(
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.5),
+                        color: AppColor.kPrimaryAppColor,
+                      ),
                     ),
                   ),
-                ),
-                decoration: BoxDecoration(
-                    color: AppColor.kPrimaryAppColor, borderRadius: BorderRadius.circular(20)),
-              ),
-            ),
 
             ///submit button
             Container(
@@ -181,9 +175,11 @@ class _LoginPageState extends State<LoginPage> {
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ForgetPassword()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ForgetPassword(),
+                    ),
+                  );
                 },
                 child: Text('Forgot Password ?',
                     style: TextStyle(
@@ -200,8 +196,12 @@ class _LoginPageState extends State<LoginPage> {
             InkWell(
               onTap: () {
                 print('tapped');
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SignUpPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SignUpPage(),
+                  ),
+                );
               },
               child: Container(
                 margin: EdgeInsets.symmetric(vertical: 20),
@@ -248,16 +248,18 @@ class _LoginPageState extends State<LoginPage> {
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Divider(
                 thickness: 1.5,
+                color: Colors.black.withOpacity(0.2),
               ),
             ),
           ),
-          Text('Social',
+          Text('Or Social',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400)),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Divider(
                 thickness: 1,
+                color: Colors.black.withOpacity(0.2),
               ),
             ),
           ),
@@ -270,18 +272,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _googleSignInUI() {
-    final signInProvider = Provider.of<GenericHelperProvider>(context);
+    final signInProvider = Provider.of<ServiceProvider>(context);
 
     return GestureDetector(
       onTap: () {
         signInProvider.signInWithGoogle(context);
       },
       child: Container(
-        height: 50,
-        margin: EdgeInsets.symmetric(vertical: 20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
+        height: 45,
         child: Row(
           children: <Widget>[
             Expanded(
@@ -290,8 +288,8 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: BoxDecoration(
                   color: Color.fromRGBO(187, 0, 27, 0.9),
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(50),
-                    topLeft: Radius.circular(50),
+                    bottomLeft: Radius.circular(8.5),
+                    topLeft: Radius.circular(8.5),
                   ),
                 ),
                 alignment: Alignment.center,
@@ -308,23 +306,28 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: BoxDecoration(
                   color: Color.fromRGBO(180, 0, 20, 0.9),
                   borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(50),
-                      topRight: Radius.circular(50)),
+                      bottomRight: Radius.circular(8.5),
+                      topRight: Radius.circular(8.5)),
                 ),
                 alignment: Alignment.center,
                 child: signInProvider.signInGoogleLoading
                     ? Padding(
                         padding: const EdgeInsets.only(
                             right: 32.0, top: 8, bottom: 8),
-                        child: CircularProgressIndicator(color: Colors.white),
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
                       )
                     : Padding(
                         padding: const EdgeInsets.only(right: 32.0),
-                        child: Text('Continue with Google',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600)),
+                        child: Text(
+                          'Continue with Google',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
               ),
             ),
@@ -334,15 +337,19 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void validInputEmailPassword() {
+  void validInputEmailPassword(ServiceProvider serviceProvider) {
     if (_emailController.text.isEmpty) {
       return todoModelBox(context, 'please insert email');
     }
     if (_passwordController.text.isEmpty) {
       return todoModelBox(context, 'please insert password');
     } else {
-      onEmailPasswordLogin(
-          context, _emailController.text, _passwordController.text);
+      //login with email & password
+      serviceProvider.emailLogin(
+        context,
+        _emailController.text,
+        _passwordController.text,
+      );
     }
   }
 }

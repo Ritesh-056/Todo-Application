@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/functions/dart/insert_and_update_todo.dart';
-import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/res/app_color.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/todo_provider.dart';
 import '../res/app_string.dart';
-import '../shared/widgets/reusable_widgets.dart';
+import '../shared/widgets/widgets.dart';
+import '../utils/utils.dart';
 
 class UpdateTodoData extends StatefulWidget {
   final title;
@@ -37,6 +38,8 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
 
   @override
   Widget build(BuildContext context) {
+    final todoServiceProvider = Provider.of<TodoServiceProvider>(context);
+
     return new SafeArea(
         child: Scaffold(
       floatingActionButton: floatActionBtn(context),
@@ -58,7 +61,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
             ),
           ),
           new Container(
-            height: 200,
+            height: 230,
             width: 330,
             decoration: todoContainerDecoration(),
             child: Column(
@@ -67,7 +70,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
                 todoTitleField(),
                 todoDateTimePicker(),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 new GestureDetector(
                   onTap: () {
@@ -75,11 +78,12 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
                       return todoModelBox(context, AppStr.titleTodoError);
                     if (_dateUpdatingController.text.isEmpty)
                       return todoModelBox(context, AppStr.dateAndTimeTodoError);
-                    updateTodoItems(
-                        context,
-                        widget.docsId,
-                        _titleUpdatingController.text,
-                        _dateUpdatingController.text);
+                    todoServiceProvider.updateTodoItems(
+                      context,
+                      widget.docsId,
+                      _titleUpdatingController.text,
+                      _dateUpdatingController.text,
+                    );
                   },
                   child: todoBtn(context, "Update"),
                 )
@@ -90,8 +94,6 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
       ),
     ));
   }
-
-  void checkData(String? title, String? date) async {}
 
   Widget positionedChildren() {
     return Padding(
@@ -110,15 +112,8 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
   BoxDecoration todoContainerDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: AppColor.kPrimaryAppColor!, width: 1.25),
       color: Colors.white70,
-      boxShadow: [
-        BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 2,
-            blurRadius: 0,
-            offset: Offset(3, 4) // changes position of shadow
-            ),
-      ],
     );
   }
 
@@ -136,29 +131,30 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
 
   Widget todoDateTimePicker() {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColor.kPrimaryAppColor!,
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.light(
+            primary: AppColor.kPrimaryAppColor!,
           ),
-          child: DateTimePicker(
-            cursorColor: AppColor.kPrimaryAppColor,
-            type: DateTimePickerType.dateTime,
-            dateMask: 'd MMM, yyyy',
-            firstDate: DateTime(2000),
-            controller: _dateUpdatingController,
-            lastDate: DateTime(2100),
-            icon: Icon(
-              Icons.event,
-              color: AppColor.kPrimaryAppColor,
-              size: 30,
-            ),
-            dateLabelText: 'Date',
-            timeLabelText: "Hour",
+        ),
+        child: DateTimePicker(
+          cursorColor: AppColor.kPrimaryAppColor,
+          type: DateTimePickerType.dateTime,
+          dateMask: 'd MMM, yyyy',
+          firstDate: DateTime(2000),
+          controller: _dateUpdatingController,
+          lastDate: DateTime(2100),
+          icon: Icon(
+            Icons.event,
+            color: AppColor.kPrimaryAppColor,
+            size: 30,
           ),
-        ));
+          dateLabelText: 'Date',
+          timeLabelText: "Hour",
+        ),
+      ),
+    );
   }
 
   @override

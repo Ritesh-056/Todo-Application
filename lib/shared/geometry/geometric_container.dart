@@ -1,8 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_app/geometry/custom_clipper.dart';
 import 'package:flutter_app/res/app_color.dart';
+
+import 'custom_clipper.dart';
 
 class ScreenGeometricCurve extends StatelessWidget {
   @override

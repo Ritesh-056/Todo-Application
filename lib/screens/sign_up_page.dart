@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/functions/dart/reusable_functions.dart';
-import 'package:flutter_app/login_functions/email_password_register.dart';
-import 'package:flutter_app/provider/password_field_checker.dart';
 import 'package:provider/provider.dart';
 
-import '../geometry/geometric_container.dart';
+import '../provider/service_provider.dart';
 import '../res/app_color.dart';
+import '../shared/geometry/geometric_container.dart';
+import '../utils/utils.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key? key, this.title}) : super(key: key);
@@ -37,7 +36,6 @@ class _SignUpPageState extends State<SignUpPage> {
     Icons.visibility_off_outlined,
     color: AppColor.kPrimaryAppColor,
   );
-
 
   @override
   void dispose() {
@@ -73,7 +71,11 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _entryField(String title, String tracker) {
+  Widget _entryField(
+    String title,
+    String tracker, {
+    ServiceProvider? serviceProvider,
+  }) {
     Widget _checkField() {
       if (tracker == "e") {
         return new TextField(
@@ -91,27 +93,24 @@ class _SignUpPageState extends State<SignUpPage> {
       } else if (tracker == "p") {
         return new TextField(
             cursorColor: AppColor.kPrimaryAppColor,
-            obscureText: Provider.of<PasswordVisibility>(context).pass_visible,
+            obscureText: serviceProvider!.isObscurePassword,
             controller: _passwordController,
             decoration: InputDecoration(
                 prefixIcon: Icon(
                   Icons.lock_outlined,
                   color: AppColor.kPrimaryAppColor,
                 ),
-                suffixIcon: Consumer<PasswordVisibility>(
-                  builder: (context, passCheck, child) => IconButton(
-                    icon: passCheck.pass_visible
-                        ? Icon(
-                            Icons.visibility_off_outlined,
-                            color: AppColor.kPrimaryAppColor,
-                          )
-                        : Icon(
-                            Icons.visibility_outlined,
-                            color: AppColor.kPrimaryAppColor,
-                          ),
+                suffixIcon: Consumer<ServiceProvider>(
+                  builder: (context, serviceProvider, child) => IconButton(
+                    icon: Icon(
+                      serviceProvider.isObscurePassword
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      color: AppColor.kPrimaryAppColor,
+                    ),
                     color: AppColor.kPrimaryAppColor,
                     onPressed: () {
-                      passCheck.enablePasswordVisibility();
+                      serviceProvider.changePasswordVisibility();
                     },
                   ),
                 ),
@@ -120,16 +119,18 @@ class _SignUpPageState extends State<SignUpPage> {
                 filled: true));
       } else {
         return new TextField(
-            cursorColor: AppColor.kPrimaryAppColor,
-            controller: _userNameController,
-            decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.account_circle_outlined,
-                  color: AppColor.kPrimaryAppColor,
-                ),
-                border: InputBorder.none,
-                fillColor: Color(0xfff5f5f6),
-                filled: true));
+          cursorColor: AppColor.kPrimaryAppColor,
+          controller: _userNameController,
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.account_circle_outlined,
+              color: AppColor.kPrimaryAppColor,
+            ),
+            border: InputBorder.none,
+            fillColor: Color(0xfff5f5f6),
+            filled: true,
+          ),
+        );
       }
     }
 
@@ -151,32 +152,32 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _submitButton() => GestureDetector(
-        onTap: validInputEmailPasswordToRegister,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.symmetric(vertical: 15),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(50)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.shade200,
-                    offset: Offset(2, 4),
-                    blurRadius: 5,
-                    spreadRadius: 2)
-              ],
-              gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [AppColor.kPrimaryAppColor!, AppColor.kPrimaryAppColor!])),
-          child: Text(
-            'Sign Up',
-            style: TextStyle(
-                fontSize: 15, color: Colors.white, fontWeight: FontWeight.w600),
-          ),
-        ),
-      );
+  Widget _submitButton(ServiceProvider serviceProvider) =>
+      serviceProvider.registerLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : GestureDetector(
+              onTap: () => validInputEmailPasswordToRegister(serviceProvider),
+              child: Container(
+                height: 45,
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.5),
+                  color: AppColor.kPrimaryAppColor,
+                ),
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            );
 
   Widget _loginAccountLabel() {
     return InkWell(
@@ -229,12 +230,12 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _emailPasswordWidget() {
+  Widget _emailPasswordWidget(ServiceProvider serviceProvider) {
     return Column(
       children: <Widget>[
         _entryField("Username", "u"),
         _entryField("Email ", "e"),
-        _entryField("Password", "p"),
+        _entryField("Password", "p", serviceProvider: serviceProvider),
       ],
     );
   }
@@ -242,6 +243,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final serviceProvider = Provider.of<ServiceProvider>(context);
+
     return new SafeArea(
       child: Scaffold(
         body: Container(
@@ -266,18 +269,22 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(
                         height: 50,
                       ),
-                      _emailPasswordWidget(),
+                      _emailPasswordWidget(serviceProvider),
                       SizedBox(
                         height: 20,
                       ),
-                      _submitButton(),
-                      SizedBox(height: height * .14),
+                      _submitButton(serviceProvider),
+                      SizedBox(height: 32),
                       _loginAccountLabel(),
                     ],
                   ),
                 ),
               ),
-              Positioned(top: 0, left: 0, child: _backButton()),
+              Positioned(
+                top: 0,
+                left: 0,
+                child: _backButton(),
+              ),
             ],
           ),
         ),
@@ -285,14 +292,19 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  void validInputEmailPasswordToRegister() {
+  void validInputEmailPasswordToRegister(ServiceProvider serviceProvider) {
     if (_emailController.text.isEmpty) {
       return todoModelBox(context, 'please insert email');
     }
     if (_passwordController.text.isEmpty) {
       return todoModelBox(context, 'please insert password');
     } else {
-      onRegisterUser(context, _emailController.text, _passwordController.text);
+      //register user
+      serviceProvider.registerUser(
+        context,
+        _emailController.text,
+        _passwordController.text,
+      );
     }
   }
 }

@@ -4,10 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/res/app_color.dart';
-import 'package:flutter_app/screens/update_task.dart';
+import 'package:flutter_app/screens/update_task_page.dart';
 
-import '../functions/dart/todohome_functions.dart';
-import '../shared/widgets/reusable_widgets.dart';
+import '../shared/widgets/alert_dialog.dart';
+import '../shared/widgets/widgets.dart';
+import '../utils/utils.dart';
 
 class TodoHome extends StatefulWidget {
   @override
@@ -33,9 +34,10 @@ class _TodoHomeState extends State<TodoHome> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: AppColor.kPrimaryAppColor,
-          title: Text('Task',
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),
+          title: Text(
+            'Task',
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+          ),
           actions: [
             PopupMenuButton(
               itemBuilder: (context) => [
@@ -43,7 +45,7 @@ class _TodoHomeState extends State<TodoHome> {
                 itemMenuList(1, "Sign out"),
                 itemMenuList(2, "Exit")
               ],
-              onSelected: (dynamic item) => SelectedItem(context, item),
+              onSelected: (dynamic item) => selectDropDownOption(context, item),
             ),
           ],
         ),
@@ -97,27 +99,43 @@ class _TodoHomeState extends State<TodoHome> {
               doc['date'],
               style: TextStyle(fontSize: 12),
             ),
-            trailing: GestureDetector(
-                onTap: () {
-                  deleteTodoItem(context, doc.id);
-                },
-                child: Icon(
-                  Icons.delete,
-                  color: AppColor.kPrimaryAppColor,
-                  size: 30,
-                )),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => UpdateTodoData(
-                    title: doc['title'],
-                    date: doc['date'],
-                    docsId: doc.id,
+            trailing: SizedBox(
+              width: 60,
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UpdateTodoData(
+                            title: doc['title'],
+                            date: doc['date'],
+                            docsId: doc.id,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Icon(
+                      Icons.edit,
+                      color: AppColor.kPrimaryAppColor,
+                      size: 25,
+                    ),
                   ),
-                ),
-              );
-            },
+                  SizedBox(width: 8,),
+                  GestureDetector(
+                    onTap: () {
+                      deleteTodoItem(context, doc.id);
+                    },
+                    child: Icon(
+                      Icons.delete,
+                      color: AppColor.kPrimaryAppColor,
+                      size: 25,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         )
         .toList();
@@ -134,4 +152,6 @@ class _TodoHomeState extends State<TodoHome> {
       }
     });
   }
+
+
 }

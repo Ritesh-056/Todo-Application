@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../res/app_color.dart';
+import '../../res/app_color.dart';
 
-showAlertDialog(BuildContext context) {
+showAlertPasswordDialog(BuildContext context) {
   // set up the buttons
   Widget okayButton = TextButton(
-    child: Text("Okay", style: TextStyle(color: AppColor.kPrimaryAppColor)),
+    child: Text(
+      "Okay",
+      style: TextStyle(
+        color: AppColor.kPrimaryAppColor,
+      ),
+    ),
     onPressed: () {
       Navigator.pop(context);
     },
@@ -16,7 +21,10 @@ showAlertDialog(BuildContext context) {
     title: Center(
       child: Text(
         "Check your email",
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     ),
     content: Text(
