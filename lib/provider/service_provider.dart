@@ -7,7 +7,7 @@ import '../functions/dart/reusable_functions.dart';
 import '../res/app_string.dart';
 import '../screens/todo_list_screen.dart';
 
-class GenericHelperProvider extends ChangeNotifier {
+class ServiceProvider extends ChangeNotifier {
   bool signInGoogleLoading = false;
 
   Future<void> signInWithGoogle(BuildContext context) async {

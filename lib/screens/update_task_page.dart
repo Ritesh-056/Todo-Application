@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/functions/dart/insert_and_update_todo.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/res/app_color.dart';
-import 'package:flutter_app/widgets/reusable_widgets.dart';
 
 import '../res/app_string.dart';
+import '../shared/widgets/reusable_widgets.dart';
 
 class UpdateTodoData extends StatefulWidget {
   final title;
@@ -70,19 +70,19 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
                   height: 10,
                 ),
                 new GestureDetector(
-                    onTap: () {
-                      if (_titleUpdatingController.text.isEmpty)
-                        return todoModelBox(context, AppStr.titleTodoError);
-                      if (_dateUpdatingController.text.isEmpty)
-                        return todoModelBox(
-                            context, AppStr.dateAndTimeTodoError);
-                      updateTodoItems(
-                          context,
-                          widget.docsId,
-                          _titleUpdatingController.text,
-                          _dateUpdatingController.text);
-                    },
-                    child: todoBtn(context, "Update"))
+                  onTap: () {
+                    if (_titleUpdatingController.text.isEmpty)
+                      return todoModelBox(context, AppStr.titleTodoError);
+                    if (_dateUpdatingController.text.isEmpty)
+                      return todoModelBox(context, AppStr.dateAndTimeTodoError);
+                    updateTodoItems(
+                        context,
+                        widget.docsId,
+                        _titleUpdatingController.text,
+                        _dateUpdatingController.text);
+                  },
+                  child: todoBtn(context, "Update"),
+                )
               ],
             ),
           )

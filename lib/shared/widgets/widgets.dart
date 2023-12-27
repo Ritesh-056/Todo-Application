@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/insert_task.dart';
 
-import '../res/app_color.dart';
+import '../../res/app_color.dart';
 
 Widget floatActionBtn(BuildContext context, {bool custom = false}) {
   return custom
@@ -10,8 +10,12 @@ Widget floatActionBtn(BuildContext context, {bool custom = false}) {
           tooltip: 'Add task',
           backgroundColor: AppColor.kPrimaryAppColor,
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AddTaskHome()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddTaskHome(),
+              ),
+            );
           },
         )
       : FloatingActionButton(

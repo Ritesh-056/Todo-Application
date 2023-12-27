@@ -5,9 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/res/app_color.dart';
 import 'package:flutter_app/screens/update_task.dart';
-import 'package:flutter_app/widgets/reusable_widgets.dart';
 
 import '../functions/dart/todohome_functions.dart';
+import '../shared/widgets/reusable_widgets.dart';
 
 class TodoHome extends StatefulWidget {
   @override
@@ -21,8 +21,7 @@ class _TodoHomeState extends State<TodoHome> {
 
   @override
   void initState() {
-    setState(() =>
-    collectionReference = FirebaseFirestore.instance
+    setState(() => collectionReference = FirebaseFirestore.instance
         .collection('todos')
         .doc(user!.uid)
         .collection("user_todo"));
@@ -32,26 +31,26 @@ class _TodoHomeState extends State<TodoHome> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: AppColor.kPrimaryAppColor,
-            title: Text('Task',
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),
-            actions: [
-              PopupMenuButton(
-                itemBuilder: (context) =>
-                [
-                  itemMenuList(0, "Theme"),
-                  itemMenuList(1, "Sign out"),
-                  itemMenuList(2, "Exit")
-                ],
-                onSelected: (dynamic item) => SelectedItem(context, item),
-              ),
-            ],
-          ),
-          floatingActionButton: floatActionBtn(context, custom: true),
-          body: showTodoListData(context),
-        ));
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColor.kPrimaryAppColor,
+          title: Text('Task',
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),
+          actions: [
+            PopupMenuButton(
+              itemBuilder: (context) => [
+                itemMenuList(0, "Theme"),
+                itemMenuList(1, "Sign out"),
+                itemMenuList(2, "Exit")
+              ],
+              onSelected: (dynamic item) => SelectedItem(context, item),
+            ),
+          ],
+        ),
+        floatingActionButton: floatActionBtn(context, custom: true),
+        body: showTodoListData(context),
+      ),
+    );
   }
 
   PopupMenuEntry itemMenuList(itemValue, itemTitle) {
@@ -84,8 +83,7 @@ class _TodoHomeState extends State<TodoHome> {
   getTodoListItems(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data!.docs
         .map(
-          (doc) =>
-          ListTile(
+          (doc) => ListTile(
             leading: Icon(
               Icons.event,
               color: AppColor.kPrimaryAppColor,
@@ -100,7 +98,7 @@ class _TodoHomeState extends State<TodoHome> {
               style: TextStyle(fontSize: 12),
             ),
             trailing: GestureDetector(
-                onTap: (){
+                onTap: () {
                   deleteTodoItem(context, doc.id);
                 },
                 child: Icon(
@@ -110,30 +108,30 @@ class _TodoHomeState extends State<TodoHome> {
                 )),
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          UpdateTodoData(
-                              title: doc['title'],
-                              date: doc['date'],
-                              docsId: doc.id)));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UpdateTodoData(
+                    title: doc['title'],
+                    date: doc['date'],
+                    docsId: doc.id,
+                  ),
+                ),
+              );
             },
           ),
-    )
+        )
         .toList();
   }
 
   void deleteTodoItem(BuildContext context, String docId) {
     showAlertDialog(
-        context, "Are you sure want to delete todo?", "Delete",
-        "Delete todo",
-            (context) async {
-          try {
-            await collectionReference.doc(docId).delete();
-          } catch (ex) {
-            log("Error! Todo deletion");
-          }
-        });
+        context, "Are you sure want to delete todo?", "Delete", "Delete todo",
+        (context) async {
+      try {
+        await collectionReference.doc(docId).delete();
+      } catch (ex) {
+        log("Error! Todo deletion");
+      }
+    });
   }
-
 }
