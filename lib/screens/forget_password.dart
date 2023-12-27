@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/functions/dart/create_new_password.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
+import 'package:flutter_app/res/app_color.dart';
+import 'package:flutter_app/res/app_string.dart';
 import 'package:flutter_app/widgets/reusable_widgets.dart';
-
-import '../const.dart';
 
 class ForgetPassword extends StatefulWidget {
   @override
@@ -16,7 +16,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -27,7 +26,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   Widget build(BuildContext context) {
     return new SafeArea(
         child: Scaffold(
-      floatingActionButton: TodoFloatingActionButton(context),
+      floatingActionButton: floatActionBtn(context),
       body: Center(
         child: SafeArea(
           child: new Stack(fit: StackFit.passthrough, children: [
@@ -41,7 +40,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     child: new Text(
                   'Forget your Password?',
                   style: TextStyle(
-                      color: colorsName,
+                      color: AppColor.kPrimaryAppColor,
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
                 )),
@@ -53,7 +52,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               right: 60,
               child: Divider(
                 thickness: 3,
-                color: colorsName,
+                color: AppColor.kPrimaryAppColor,
               ),
             ),
             new SingleChildScrollView(
@@ -107,13 +106,14 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: colorsName,
+                              color: AppColor.kPrimaryAppColor,
                             ),
                             child: Center(
                                 child: Text(
                               'Send',
                               style: TextStyle(
-                                  color: text_color_white, fontSize: 14),
+                                  color: AppColor.kPrimaryAppTextColor,
+                                  fontSize: 14),
                             )),
                           ),
                         ),
@@ -121,7 +121,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          forgetPasswordMessageToUser,
+                          AppStr.forgetPasswordStr,
                           style: TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 12),
                         ),
@@ -145,4 +145,3 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     }
   }
 }
-

@@ -3,14 +3,15 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
-import 'package:flutter_app/main.dart';
 import 'package:flutter_app/screens/todo_list_screen.dart';
+
+import '../../auth_services.dart';
 
 void updateTodoItems(BuildContext context, String todoItemId, String titleTodo,
     String dateTimeTodo) async {
   CollectionReference collectionReference = FirebaseFirestore.instance
       .collection('todos')
-      .doc(auth.currentUser!.uid)
+      .doc(AuthService().auth.currentUser!.uid)
       .collection("user_todo");
 
   try {
@@ -32,7 +33,7 @@ void onCreateNewTodo(
     BuildContext context, String titleTodo, String dateTimeTodo) {
   CollectionReference collectionReference = FirebaseFirestore.instance
       .collection('todos')
-      .doc(auth.currentUser!.uid)
+      .doc(AuthService().auth.currentUser!.uid)
       .collection("user_todo");
 
   try {

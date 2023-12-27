@@ -1,10 +1,7 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_app/functions/dart/authentication_function.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
 import 'package:flutter_app/geometry/geometric_container.dart';
 import 'package:flutter_app/login_functions/email_password_login.dart';
@@ -12,12 +9,9 @@ import 'package:flutter_app/provider/generic_function_provider.dart';
 import 'package:flutter_app/provider/password_field_checker.dart';
 import 'package:flutter_app/screens/forget_password.dart';
 import 'package:flutter_app/screens/sign_up.dart';
-import 'package:flutter_app/screens/todo_list_screen.dart';
-import 'package:flutter_app/main.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import '../const.dart';
+
+import '../res/app_color.dart';
 
 class LoginPage extends StatefulWidget {
   // final String title;
@@ -39,9 +33,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _passwordController = TextEditingController();
   Icon icon = Icon(
     Icons.visibility_off_outlined,
-    color: colorsName,
+    color: AppColor.kPrimaryAppColor,
   );
-
 
   @override
   void dispose() {
@@ -64,14 +57,13 @@ class _LoginPageState extends State<LoginPage> {
               left: 20,
               child: Icon(
                 Icons.arrow_back_ios,
-                color: colorsName,
+                color: AppColor.kPrimaryAppColor,
               ),
             ),
-
             Positioned(
-                top: -height * .15,
-                right: -MediaQuery.of(context).size.width * .4,
-                // child: BezierContainer()
+              top: -height * .15,
+              right: -MediaQuery.of(context).size.width * .4,
+              // child: BezierContainer()
               child: ScreenGeometricCurve(),
             ),
             LoginHomeContainer(height),
@@ -94,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Text(
                 'Login',
                 style: TextStyle(
-                  color: colorsName,
+                  color: AppColor.kPrimaryAppColor,
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                 ),
@@ -109,17 +101,17 @@ class _LoginPageState extends State<LoginPage> {
               height: 10,
             ),
             TextField(
-              cursorColor: colorsName,
+              cursorColor: AppColor.kPrimaryAppColor,
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.email_outlined,
-                    color: colorsName,
+                    color: AppColor.kPrimaryAppColor,
                   ),
                   border: InputBorder.none,
                   fillColor: Color(0xfff5f5f6),
-                  hoverColor: colorsName,
+                  hoverColor: AppColor.kPrimaryAppColor,
                   filled: true),
             ),
             SizedBox(height: 20),
@@ -131,27 +123,27 @@ class _LoginPageState extends State<LoginPage> {
               height: 10,
             ),
             TextField(
-              cursorColor: colorsName,
+              cursorColor: AppColor.kPrimaryAppColor,
               controller: _passwordController,
               obscureText:
                   Provider.of<PasswordVisibility>(context).pass_visible,
               decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock_outlined,
-                    color: colorsName,
+                    color: AppColor.kPrimaryAppColor,
                   ),
                   suffixIcon: Consumer<PasswordVisibility>(
                     builder: (context, passCheck, child) => IconButton(
                       icon: passCheck.pass_visible
                           ? Icon(
                               Icons.visibility_off_outlined,
-                              color: colorsName,
+                              color: AppColor.kPrimaryAppColor,
                             )
                           : Icon(
                               Icons.visibility_outlined,
-                              color: colorsName,
+                              color: AppColor.kPrimaryAppColor,
                             ),
-                      color: colorsName,
+                      color: AppColor.kPrimaryAppColor,
                       onPressed: () {
                         passCheck.enablePasswordVisibility();
                       },
@@ -179,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 decoration: BoxDecoration(
-                    color: colorsName, borderRadius: BorderRadius.circular(20)),
+                    color: AppColor.kPrimaryAppColor, borderRadius: BorderRadius.circular(20)),
               ),
             ),
 
@@ -196,12 +188,12 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text('Forgot Password ?',
                     style: TextStyle(
                         fontSize: 13,
-                        color: colorsName,
+                        color: AppColor.kPrimaryAppColor,
                         fontWeight: FontWeight.w400)),
               ),
             ),
             _divider(),
-            _GoogleLoginContainer(),
+            _googleSignInUI(),
             SizedBox(
               height: 10,
             ),
@@ -229,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
                     Text(
                       'Register',
                       style: TextStyle(
-                          color: colorsName,
+                          color: AppColor.kPrimaryAppColor,
                           fontSize: 13,
                           fontWeight: FontWeight.w700),
                     ),
@@ -277,12 +269,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _GoogleLoginContainer() {
+  Widget _googleSignInUI() {
+    final signInProvider = Provider.of<GenericHelperProvider>(context);
+
     return GestureDetector(
       onTap: () {
-        Provider.of<GenericHelperProvider>(context, listen: false)
-            .onGoogleLoginPressed();
-        signInWithGoogle(context);
+        signInProvider.signInWithGoogle(context);
       },
       child: Container(
         height: 50,
@@ -320,7 +312,7 @@ class _LoginPageState extends State<LoginPage> {
                       topRight: Radius.circular(50)),
                 ),
                 alignment: Alignment.center,
-                child: context.watch<GenericHelperProvider>().checkLoading
+                child: signInProvider.signInGoogleLoading
                     ? Padding(
                         padding: const EdgeInsets.only(
                             right: 32.0, top: 8, bottom: 8),

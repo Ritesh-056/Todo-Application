@@ -3,10 +3,10 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/functions/dart/insert_and_update_todo.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
-import 'package:flutter_app/string_constant.dart';
+import 'package:flutter_app/res/app_color.dart';
 import 'package:flutter_app/widgets/reusable_widgets.dart';
 
-import '../const.dart';
+import '../res/app_string.dart';
 
 class UpdateTodoData extends StatefulWidget {
   final title;
@@ -39,7 +39,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
   Widget build(BuildContext context) {
     return new SafeArea(
         child: Scaffold(
-      floatingActionButton: TodoFloatingActionButton(context),
+      floatingActionButton: floatActionBtn(context),
       body: Center(
         child: new Stack(fit: StackFit.passthrough, children: [
           Positioned(
@@ -54,7 +54,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
             right: 65,
             child: Divider(
               thickness: 3,
-              color: colorsName,
+              color: AppColor.kPrimaryAppColor,
             ),
           ),
           new Container(
@@ -72,18 +72,17 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
                 new GestureDetector(
                     onTap: () {
                       if (_titleUpdatingController.text.isEmpty)
-                        return todoModelBox(
-                            context, ErrorString.titleTodoError);
+                        return todoModelBox(context, AppStr.titleTodoError);
                       if (_dateUpdatingController.text.isEmpty)
                         return todoModelBox(
-                            context, ErrorString.dateAndTimeTodoError);
+                            context, AppStr.dateAndTimeTodoError);
                       updateTodoItems(
                           context,
                           widget.docsId,
                           _titleUpdatingController.text,
                           _dateUpdatingController.text);
                     },
-                    child: TodoGenericButton(context, "Update"))
+                    child: todoBtn(context, "Update"))
               ],
             ),
           )
@@ -101,7 +100,9 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
           child: new Text(
         'Update your Task',
         style: TextStyle(
-            color: colorsName, fontSize: 18, fontWeight: FontWeight.bold),
+            color: AppColor.kPrimaryAppColor,
+            fontSize: 18,
+            fontWeight: FontWeight.bold),
       )),
     );
   }
@@ -125,7 +126,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: TextFormField(
-        cursorColor: colorsName,
+        cursorColor: AppColor.kPrimaryAppColor,
         controller: _titleUpdatingController,
         decoration:
             InputDecoration(hintText: "Insert Task", border: InputBorder.none),
@@ -139,11 +140,11 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
         child: Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: colorsName!,
+              primary: AppColor.kPrimaryAppColor!,
             ),
           ),
           child: DateTimePicker(
-            cursorColor: colorsName,
+            cursorColor: AppColor.kPrimaryAppColor,
             type: DateTimePickerType.dateTime,
             dateMask: 'd MMM, yyyy',
             firstDate: DateTime(2000),
@@ -151,7 +152,7 @@ class _UpdateTodoDataState extends State<UpdateTodoData> {
             lastDate: DateTime(2100),
             icon: Icon(
               Icons.event,
-              color: colorsName,
+              color: AppColor.kPrimaryAppColor,
               size: 30,
             ),
             dateLabelText: 'Date',

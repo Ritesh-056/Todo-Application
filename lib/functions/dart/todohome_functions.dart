@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/const.dart';
 import 'package:flutter_app/functions/dart/reusable_functions.dart';
-import 'package:flutter_app/main.dart';
+import 'package:flutter_app/res/app_color.dart';
 import 'package:flutter_app/screens/login_page.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import '../../auth_services.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -42,10 +43,11 @@ Future<void> SelectedItem(BuildContext context, item) async {
       break;
 
     case 1:
-      if (auth.currentUser?.uid != null) {
+      if (AuthService().auth.currentUser?.uid != null) {
         showAlertDialog(
-            context, "Are you sure want to logout?", "Log out", "Log out", (context) {
-              funcSignOut(context);
+            context, "Are you sure want to logout?", "Log out", "Log out",
+            (context) {
+          funcSignOut(context);
         });
       } else {
         print("No user found...!");
@@ -57,10 +59,9 @@ Future<void> SelectedItem(BuildContext context, item) async {
           context,
           "Are you sure want to exit ? App will close instantly.",
           "Exit",
-          "Exit App",
-          (context){
-            funcExit(context);
-          });
+          "Exit App", (context) {
+        funcExit(context);
+      });
       break;
   }
 }
@@ -77,13 +78,13 @@ colorPickerAlertDialog(BuildContext context) {
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-      ColorPicker(
-            pickerColor: colorsName!,
-            pickerAreaHeightPercent: 0.5,
-            onColorChanged: (colors) {
-              colorsName = colors;
-            },
-          ),
+        ColorPicker(
+          pickerColor: AppColor.kPrimaryAppColor!,
+          pickerAreaHeightPercent: 0.5,
+          onColorChanged: (colors) {
+            AppColor.kPrimaryAppColor = colors;
+          },
+        ),
         SizedBox(
           height: 20,
         ),
@@ -109,27 +110,22 @@ colorPickerAlertDialog(BuildContext context) {
   );
 }
 
-
-
 showAlertDialog(BuildContext context, alertTitle, doneButton, alertMainTitle,
-    Function(BuildContext context) onPressAction ) {
-
+    Function(BuildContext context) onPressAction) {
   // set up the buttons
   Widget cancelButton = TextButton(
-    child: Text("Cancel", style: TextStyle(color: colorsName)),
+    child: Text("Cancel", style: TextStyle(color: AppColor.kPrimaryAppColor)),
     onPressed: () {
       Navigator.pop(context);
     },
   );
 
   Widget continueButton = TextButton(
-    child: Text(doneButton, style: TextStyle(color: colorsName)),
-    onPressed: (){
-      onPressAction(context);
-      Navigator.pop(context);
-    }
-  );
-
+      child: Text(doneButton, style: TextStyle(color: AppColor.kPrimaryAppColor)),
+      onPressed: () {
+        onPressAction(context);
+        Navigator.pop(context);
+      });
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
@@ -158,8 +154,6 @@ showAlertDialog(BuildContext context, alertTitle, doneButton, alertMainTitle,
   );
 }
 
-
-
 Widget showLoadingPlaceHolder() => Center(
       child: Container(
         child: Padding(
@@ -171,7 +165,7 @@ Widget showLoadingPlaceHolder() => Center(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: CircularProgressIndicator(
                   strokeWidth: 4,
-                  color: colorsName,
+                  color: AppColor.kPrimaryAppColor,
                 ),
               ),
               Text('Loading..!'),
@@ -180,8 +174,6 @@ Widget showLoadingPlaceHolder() => Center(
         ),
       ),
     );
-
-
 
 Widget showEmptyPlaceHolder() {
   return Center(
@@ -193,7 +185,7 @@ Widget showEmptyPlaceHolder() {
           children: [
             Icon(
               Icons.hourglass_empty_outlined,
-              color: colorsName,
+              color: AppColor.kPrimaryAppColor,
               size: 50,
             ),
             Text('Empty data..!'),

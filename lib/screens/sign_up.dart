@@ -7,8 +7,8 @@ import 'package:flutter_app/login_functions/email_password_register.dart';
 import 'package:flutter_app/provider/password_field_checker.dart';
 import 'package:provider/provider.dart';
 
-import '../const.dart';
 import '../geometry/geometric_container.dart';
+import '../res/app_color.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key? key, this.title}) : super(key: key);
@@ -35,7 +35,7 @@ class _SignUpPageState extends State<SignUpPage> {
   var count = 0;
   Icon icon = Icon(
     Icons.visibility_off_outlined,
-    color: colorsName,
+    color: AppColor.kPrimaryAppColor,
   );
 
 
@@ -58,14 +58,14 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
               child: Icon(
                 Icons.keyboard_arrow_left,
-                color: colorsName,
+                color: AppColor.kPrimaryAppColor,
                 size: 40,
               ),
             ),
             Text('Back',
                 style: TextStyle(
                     fontSize: 15,
-                    color: colorsName,
+                    color: AppColor.kPrimaryAppColor,
                     fontWeight: FontWeight.w500))
           ],
         ),
@@ -77,39 +77,39 @@ class _SignUpPageState extends State<SignUpPage> {
     Widget _checkField() {
       if (tracker == "e") {
         return new TextField(
-            cursorColor: colorsName,
+            cursorColor: AppColor.kPrimaryAppColor,
             keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             decoration: InputDecoration(
                 prefixIcon: Icon(
                   Icons.email_outlined,
-                  color: colorsName,
+                  color: AppColor.kPrimaryAppColor,
                 ),
                 border: InputBorder.none,
                 fillColor: Color(0xfff5f5f6),
                 filled: true));
       } else if (tracker == "p") {
         return new TextField(
-            cursorColor: colorsName,
+            cursorColor: AppColor.kPrimaryAppColor,
             obscureText: Provider.of<PasswordVisibility>(context).pass_visible,
             controller: _passwordController,
             decoration: InputDecoration(
                 prefixIcon: Icon(
                   Icons.lock_outlined,
-                  color: colorsName,
+                  color: AppColor.kPrimaryAppColor,
                 ),
                 suffixIcon: Consumer<PasswordVisibility>(
                   builder: (context, passCheck, child) => IconButton(
                     icon: passCheck.pass_visible
                         ? Icon(
                             Icons.visibility_off_outlined,
-                            color: colorsName,
+                            color: AppColor.kPrimaryAppColor,
                           )
                         : Icon(
                             Icons.visibility_outlined,
-                            color: colorsName,
+                            color: AppColor.kPrimaryAppColor,
                           ),
-                    color: colorsName,
+                    color: AppColor.kPrimaryAppColor,
                     onPressed: () {
                       passCheck.enablePasswordVisibility();
                     },
@@ -120,12 +120,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 filled: true));
       } else {
         return new TextField(
-            cursorColor: colorsName,
+            cursorColor: AppColor.kPrimaryAppColor,
             controller: _userNameController,
             decoration: InputDecoration(
                 prefixIcon: Icon(
                   Icons.account_circle_outlined,
-                  color: colorsName,
+                  color: AppColor.kPrimaryAppColor,
                 ),
                 border: InputBorder.none,
                 fillColor: Color(0xfff5f5f6),
@@ -169,7 +169,7 @@ class _SignUpPageState extends State<SignUpPage> {
               gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
-                  colors: [colorsName!, colorsName!])),
+                  colors: [AppColor.kPrimaryAppColor!, AppColor.kPrimaryAppColor!])),
           child: Text(
             'Sign Up',
             style: TextStyle(
@@ -207,7 +207,7 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Text(
                 'Login',
                 style: TextStyle(
-                    color: colorsName,
+                    color: AppColor.kPrimaryAppColor,
                     fontSize: 13,
                     fontWeight: FontWeight.w700),
               ),
@@ -222,7 +222,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Text(
       'Register',
       style: TextStyle(
-        color: colorsName,
+        color: AppColor.kPrimaryAppColor,
         fontSize: 20,
         fontWeight: FontWeight.w700,
       ),

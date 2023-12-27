@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/insert_task.dart';
 
-import '../const.dart';
+import '../res/app_color.dart';
 
-Widget TodoFloatingActionButton(BuildContext context, {bool custom = false}) {
+Widget floatActionBtn(BuildContext context, {bool custom = false}) {
   return custom
       ? FloatingActionButton(
           child: Icon(Icons.add),
           tooltip: 'Add task',
-          backgroundColor: colorsName,
+          backgroundColor: AppColor.kPrimaryAppColor,
           onPressed: () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => AddTaskHome()));
@@ -16,14 +16,14 @@ Widget TodoFloatingActionButton(BuildContext context, {bool custom = false}) {
         )
       : FloatingActionButton(
           child: Icon(Icons.close),
-          backgroundColor: colorsName,
+          backgroundColor: AppColor.kPrimaryAppColor,
           onPressed: () {
             Navigator.pop(context);
           },
         );
 }
 
-Widget TodoGenericButton(BuildContext context, String btnPerformingName) {
+Widget todoBtn(BuildContext context, String btnPerformingName) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16.0),
     child: new Container(
@@ -31,12 +31,15 @@ Widget TodoGenericButton(BuildContext context, String btnPerformingName) {
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: colorsName,
+        color: AppColor.kPrimaryAppColor,
       ),
       child: Center(
           child: Text(
         btnPerformingName,
-        style: TextStyle(color: text_color_white, fontSize: 16),
+        style: TextStyle(
+          color: AppColor.kPrimaryAppTextColor,
+          fontSize: 16,
+        ),
       )),
     ),
   );

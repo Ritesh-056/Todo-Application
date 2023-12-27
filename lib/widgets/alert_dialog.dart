@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/const.dart';
+
+import '../res/app_color.dart';
 
 showAlertDialog(BuildContext context) {
   // set up the buttons
   Widget okayButton = TextButton(
-    child: Text("Okay", style: TextStyle(color: colorsName)),
+    child: Text("Okay", style: TextStyle(color: AppColor.kPrimaryAppColor)),
     onPressed: () {
       Navigator.pop(context);
     },

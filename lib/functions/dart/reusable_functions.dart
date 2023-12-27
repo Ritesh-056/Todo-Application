@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/const.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../res/app_color.dart';
 
 void todoToast(text) {
   Fluttertoast.showToast(
@@ -22,7 +23,11 @@ void todoModelBox(BuildContext context, String textStr) {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ListTile(
-                  leading: new Icon(Icons.error, size: 50, color: colorsName),
+                  leading: new Icon(
+                    Icons.error,
+                    size: 50,
+                    color: AppColor.kPrimaryAppColor,
+                  ),
                   title: new Text('Oops...!',
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),

@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/res/app_color.dart';
 import 'package:flutter_app/screens/update_task.dart';
 import 'package:flutter_app/widgets/reusable_widgets.dart';
 
-import '../const.dart';
 import '../functions/dart/todohome_functions.dart';
 
 class TodoHome extends StatefulWidget {
@@ -34,7 +34,7 @@ class _TodoHomeState extends State<TodoHome> {
     return SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: colorsName,
+            backgroundColor: AppColor.kPrimaryAppColor,
             title: Text('Task',
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),
             actions: [
@@ -49,7 +49,7 @@ class _TodoHomeState extends State<TodoHome> {
               ),
             ],
           ),
-          floatingActionButton: TodoFloatingActionButton(context, custom: true),
+          floatingActionButton: floatActionBtn(context, custom: true),
           body: showTodoListData(context),
         ));
   }
@@ -88,7 +88,7 @@ class _TodoHomeState extends State<TodoHome> {
           ListTile(
             leading: Icon(
               Icons.event,
-              color: colorsName,
+              color: AppColor.kPrimaryAppColor,
               size: 30,
             ),
             title: Text(
@@ -105,7 +105,7 @@ class _TodoHomeState extends State<TodoHome> {
                 },
                 child: Icon(
                   Icons.delete,
-                  color: colorsName,
+                  color: AppColor.kPrimaryAppColor,
                   size: 30,
                 )),
             onTap: () {
